@@ -2,6 +2,24 @@
 include 'config/dbconnection.php';
 include 'models/functions.php';
 
+function toJson($str) {
+    // Regular expression pattern to extract key-value pairs
+    $pattern = '/(\w+)\s*=\s*(\{.*?\}|[^{},]+)(?:,|\s*})/';
+
+    // Match all key-value pairs
+    preg_match_all($pattern, $str, $matches, PREG_SET_ORDER);
+
+    $data = [];
+    foreach ($matches as $match) {
+        $key = trim($match[1]);
+        $value = trim($match[2], '{}');
+        $data[$key] = $value;
+    }
+
+    // Encode array into JSON
+    return json_encode($data, JSON_PRETTY_PRINT);
+}
+
 ?>
 
 <?= template_header('Publicações'); ?>
@@ -22,7 +40,7 @@ include 'models/functions.php';
                 $valorSiteName = "valor_site_$lang";
                 $query = "SELECT dados, YEAR(data) AS publication_year, p.tipo, pt.$valorSiteName FROM publicacoes p
                                 LEFT JOIN publicacoes_tipos pt ON p.tipo = pt.valor_API
-                                WHERE visivel = true
+                                WHERE visivelGeral = true
                                 ORDER BY publication_year DESC, pt.$valorSiteName, data DESC";
                 $stmt = $pdo->prepare($query);
                 $stmt->execute();
@@ -60,19 +78,45 @@ include 'models/functions.php';
                             <?php foreach ($yearPublica as $site => $publicacoes) : ?>
                                 <div style="margin-left: 10px;" class="mt-3"><b><?= $site ?></b><br></div>
                                 <div style="margin-left: 20px;" id="publications<?= $year ?><?= $site ?>">
-                                    <?php foreach ($publicacoes as $publicacao) : ?>
-                                        <script>
-                                        var formattedCitation = new Cite(<?= json_encode($publicacao) ?>).format('bibliography', {
-                                                format: 'html',
-                                                template: 'apa',
-                                                lang: 'en-US'
-                                            });;
-                                            var citationContainer = document.createElement('div');
-                                            citationContainer.innerHTML = formattedCitation;
-                                            citationContainer.classList.add('mb-3');
-                                            document.getElementById('publications<?= $year ?><?= $site ?>').appendChild(citationContainer);
-                                        </script>
-                                    <?php endforeach; ?>
+
+                                    <script>
+                                        <?php
+                                            $publicacoesJson = [];
+
+                                            foreach ($publicacoes as $publicacao) {
+                                                // Add JSON to the entries array
+                                                $publicacoesJson[] = toJson($publicacao);
+                                            }
+                                        ?>
+
+                                        var publicacoes = <?= json_encode($publicacoesJson) ?>;
+
+                                        var publicacoesFiltradas = [...new Map(publicacoes.map(item => {
+                                            item = JSON.parse(item);
+                                            let url = item['url'] ? item['url'].toLowerCase().replace(/^http:\/\/dx.doi.org/, 'https:\/\/doi.org') : '';
+                                            url = url ? url.replace(/^http:/, 'https:') : '';
+                                            return [url === '' ? item['title'] : url, item];
+                                        })).values()]
+
+                                        <?php foreach ($publicacoes as $publicacao) : ?>
+
+                                            var publicacao = <?= toJson($publicacao) ?>;
+                                            
+                                            if (publicacoesFiltradas.some(e => e.title === publicacao.title)) {
+                                                var formattedCitation = new Cite(<?= json_encode($publicacao) ?>).format('bibliography', {
+                                                    format: 'html',
+                                                    template: 'apa',
+                                                    lang: 'en-US'
+                                                });
+                                                var citationContainer = document.createElement('div');
+                                                citationContainer.innerHTML = formattedCitation;
+                                                citationContainer.classList.add('mb-3');
+                                                document.getElementById('publications<?= $year ?><?= $site ?>').appendChild(citationContainer);
+
+                                                publicacoesFiltradas = publicacoesFiltradas.filter(e => e.title !== publicacao.title);
+                                            }
+                                        <?php endforeach; ?>
+                                    </script>
                                 </div>
                             <?php endforeach; ?>
                         </div><br>
