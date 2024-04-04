@@ -1110,6 +1110,21 @@ INSERT INTO `publicacoes_tipos` (`valor_API`, `valor_site_pt`, `valor_site_en`) 
 ('working-paper', 'Outros', 'Others');
 
 --
+-- Table structure for table `newsletter`
+--
+
+CREATE TABLE `newsletter` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `email` varchar(255) NOT NULL,
+  `createdAt` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updateAt` timestamp NOT NULL DEFAULT current_timestamp(),
+  `isActive` tinyint(1) NOT NULL DEFAULT 1,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `newsletter_unique` (`email`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+
+
+--
 -- Indexes for dumped tables
 --
 
