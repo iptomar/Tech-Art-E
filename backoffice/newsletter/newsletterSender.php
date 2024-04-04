@@ -1,3 +1,7 @@
+<html>
+  <head>
+  <meta charset="UTF-8">
+  </head>
 <?php
 
 header('Content-Type: text/html; charset=utf-8');
@@ -21,21 +25,59 @@ $mail->SMTPAuth   = TRUE;
 $mail->SMTPSecure = "tls";
 $mail->Port       = 587;
 $mail->Host       = "smtp.gmail.com";
-$mail->Username   = "tiagoptgamer@gmail.com";
-$mail->Password   = "aduz hgqr ebgy jekq";
+$mail->Username   = "";
+$mail->Password   = "";
+
+$mail->CharSet = "UTF-8";
+$mail->Encoding = "base64";
 
 $mail->IsHTML(true);
 $mail->AddAddress("tiago_oliveira2001@hotmail.com", "recipient-name");
-$mail->SetFrom("tiagoptgamer@gmail.com", "from-name");
-$mail->AddReplyTo("iago_oliveira2001@hotmail.com", "reply-to-name");
-$mail->AddCC("iago_oliveira2001@hotmail.com", "cc-recipient-name");
-$mail->Subject = "Test is Test Email sent via Gmail SMTP Server using PHP Mailer";
-$content = "<b>This is a Test Email sent via Gmail SMTP Server using PHP mailer class.</b>";
+$mail->SetFrom("", "TechnArt");
+//$mail->AddReplyTo("iago_oliveira2001@hotmail.com", "reply-to-name");
+//$mail->AddCC("iago_oliveira2001@hotmail.com", "cc-recipient-name");
+$mail->Subject = "TechnArt - Newsletter";
+
+$content = '';
+
+// Adiciona o cabeçalho do e-mail ao conteúdo
+$content .= '<!DOCTYPE html>';
+$content .= '<html lang="pt">';
+$content .= '<head>';
+$content .= '<meta charset="UTF-8">';
+$content .= '<meta name="viewport" content="width=device-width, initial-scale=1.0">';
+$content .= '<title>TechnArt - Newsletter</title>';
+$content .= '<style>';
+// Estilos CSS aqui (opcional)
+$content .= '</style>';
+$content .= '</head>';
+$content .= '<body>';
+
+// Adiciona o corpo do e-mail ao conteúdo
+$content .= '<div>';
+//$content .= '<h1>Olá, ' . $nome . '!</h1>';
+$content .= '<h1> TechnArt - Newsletter </h1>';
 
 foreach ($dadosEmail as $projeto) {
   echo $projeto . '; ';
-  $content .= $projeto . '; ';
+
+  $array = explode("||", $projeto);
+
+  $imgtest = "5c.JPG";
+  
+  $content .= "<p><b>" . $array[0] . "</b></p>";
+  $content .= "<p>" . $array[1] . "</p>";
+  $content .= "<p> <img src='../assets/projetos/'". $imgtest . " class='project-image' alt='ImagemProjeto'></p>";
 }
+
+$content .= '</div>';
+$content .= '<div>';
+$content .= '<p>Mais info ...</p>';
+$content .= '</div>';
+
+// Fecha o corpo do e-mail
+$content .= '</body>';
+$content .= '</html>';
 
 
 

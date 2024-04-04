@@ -137,7 +137,8 @@
             checkboxes.forEach(function(checkbox) {
                 if (checkbox.checked) {
                     verificarCheckbox = true;
-                    checkedItems.push(checkbox.parentElement.querySelector('h3').textContent);
+                    var projeto = checkbox.parentElement.querySelector('h3').textContent + "||" + checkbox.parentElement.querySelector('p').textContent;
+                    checkedItems.push(projeto);
                 }
             });
             if (!verificarCheckbox) {
@@ -150,7 +151,7 @@
                 fetch('newsletterSender.php', {
                     method: 'POST',
                     headers: {
-                        'Content-Type': 'application/json',
+                        'Content-Type': 'application/json; charset=utf-8',
                     },
                     body: JSON.stringify(checkedItems),
                 })
