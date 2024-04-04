@@ -1269,8 +1269,17 @@ ALTER TABLE `publicacoes`
 ALTER TABLE `publicacoes_investigadores`
   ADD CONSTRAINT `publicacoes_investigadores_ibfk_1` FOREIGN KEY (`publicacao`) REFERENCES `publicacoes` (`idPublicacao`) ON DELETE CASCADE,
   ADD CONSTRAINT `publicacoes_investigadores_ibfk_2` FOREIGN KEY (`investigador`) REFERENCES `investigadores` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `publicacoes_investigadores`
+--
+alter table investigadores_projetos add column isManager boolean default false;
+
 COMMIT;
+
+
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+
