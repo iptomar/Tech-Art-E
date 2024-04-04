@@ -45,7 +45,7 @@ $noticias = $stmt->fetchAll(PDO::FETCH_ASSOC);
          <div class="row justify-content-center mt-3">
 
             <?php foreach ($noticias as $noticia) : ?>
-               <div class="ml-5 imgList">
+               <div class="col-lg-3 col-md-3 col-sm-6 imgList">
                   <a href="noticia.php?noticia=<?= $noticia['id'] ?>">
                      <div class="image_default">
                         <img class="centrare" style="object-fit: cover; width:225px; height:280px;" src="../backoffice/assets/noticias/<?= $noticia['imagem'] ?>" alt="">
