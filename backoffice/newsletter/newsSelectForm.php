@@ -145,6 +145,27 @@
                 return;
             }else{
                 console.log(checkedItems);
+
+                // Enviar os dados para o PHP via AJAX
+                fetch('newsletterSender.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(checkedItems),
+                })
+                .then(response => {
+                    if (response.ok) {
+                        //console.log('E-mail enviado com sucesso!');
+                        console.log(response.text());
+                    } else {
+                        console.error('Erro ao enviar e-mail:', response.statusText);
+                    }
+                })
+                .catch(error => {
+                    console.error('Erro ao enviar e-mail:', error);
+                });
+
                 // Fecha o modal simulando o clique no botão "Fechar"
                 document.querySelector('#projectPopUpList .modal-footer .btn-secondary').click();
                 var input = document.getElementById('searchInput');
