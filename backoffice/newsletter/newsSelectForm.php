@@ -60,6 +60,10 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">Projetos</h5>
+                    <div class="input-group" style="margin-left: auto; max-width: 300px;">
+                        <input type="text" class="form-control" placeholder="Pesquisar por nome ou descrição" id="searchInput">
+                    </div>
+
                 </div>
                 <div class="modal-body">
                     <div class="project-list">
@@ -102,7 +106,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" onclick="concluir()">Concluído</button>
+                    <button type="button" class="btn btn-primary" onclick="concluir()">Selecionar</button>
                     <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="limparSelecoes()">Fechar</button>
                 </div>
             </div>
@@ -110,25 +114,61 @@
     </div>
 
     <script>
+        // Função para filtrar os projetos com base no texto da barra de pesquisa
+        document.getElementById('searchInput').addEventListener('input', function() {
+            var searchText = this.value.toLowerCase();
+            var projects = document.querySelectorAll('.project');
+            projects.forEach(function(project) {
+                var projectName = project.querySelector('h3').textContent.toLowerCase();
+                var projectDescription = project.querySelector('p').textContent.toLowerCase();
+                if (projectName.includes(searchText) || projectDescription.includes(searchText)) {
+                    project.style.display = 'flex';
+                } else {
+                    project.style.display = 'none';
+                }
+            });
+        });
+        
         function concluir() {
             var checkboxes = document.querySelectorAll('.checkbox');
             var checkedItems = [];
+            var verificarCheckbox = false;
             // Obter os projetos selecionados
             checkboxes.forEach(function(checkbox) {
                 if (checkbox.checked) {
+                    verificarCheckbox = true;
                     checkedItems.push(checkbox.parentElement.querySelector('h3').textContent);
                 }
             });
-            console.log(checkedItems);
-            // Fecha o modal simulando o clique no botão "Fechar"
-            document.querySelector('#projectPopUpList .modal-footer .btn-secondary').click();
+            if (!verificarCheckbox) {
+                alert('Selecione pelo menos um projeto!');
+                return;
+            }else{
+                console.log(checkedItems);
+                // Fecha o modal simulando o clique no botão "Fechar"
+                document.querySelector('#projectPopUpList .modal-footer .btn-secondary').click();
+                var input = document.getElementById('searchInput');
+                input.value = '';
+                mostrarTodosProjetos();
+            }
+            
         }
 
         function limparSelecoes() {
             // Limpar seleções feitas
             var checkboxes = document.querySelectorAll('.checkbox');
+            var input = document.getElementById('searchInput');
+            input.value = '';
             checkboxes.forEach(function(checkbox) {
                 checkbox.checked = false;
+            });
+            mostrarTodosProjetos();
+        }
+
+        function mostrarTodosProjetos() {
+            var projects = document.querySelectorAll('.project');
+            projects.forEach(function(project) {
+                project.style.display = 'flex';
             });
         }
     </script>
