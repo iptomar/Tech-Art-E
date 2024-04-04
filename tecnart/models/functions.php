@@ -488,3 +488,13 @@ function show_error($error)
   </div>
 </div>';
 }
+
+function change_lan($key) {
+  $translations = array(
+      "previous" => "Previous",
+      "next" => "Next",
+      // Add more translations as needed
+  );
+
+  return isset($translations[$key]) ? $translations[$key] : "";
+}
