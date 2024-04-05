@@ -191,9 +191,9 @@ $language = ($_SESSION["lang"] == "en") ? "_en" : "";
             <?php foreach ($noticias as $noticia) : ?>
                <div class="card-product">
                   <div class="absoluto">
-                     <a href="noticia.php?noticia=<?= $noticia['id'] ?>">
-                        <div style="z-index: 1;" class="image_default">
-                           <img class="img-fluid" src="../backoffice/assets/noticias/<?= $noticia['imagem'] ?>" alt="">
+                     <a href="noticia.php?noticia=<?= $noticia['id'] ?>" style="display: inline-block; vertical-align: top;">
+                        <div style="z-index: 1;" class="image_default news-image">
+                           <img class="img-fluid news-image" src="../backoffice/assets/noticias/<?= $noticia['imagem'] ?>" alt="">
                            <div class="text-block">
                               <h5 style="font-size: 20px; text-transform: uppercase; font-weight: 600;">
                                  <?php
