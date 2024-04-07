@@ -21,28 +21,34 @@ function toJson($str) {
     return json_encode($data, JSON_PRETTY_PRINT);
 }
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
+if (!isset($_SESSION["lang"])) {
+    $lang = "pt";
+} else {
+    $lang = $_SESSION["lang"];
+}
+$valorSiteName = "valor_site_$lang";
+$sql = "SELECT p.dados, YEAR(p.data) AS publication_year, p.tipo, pt.$valorSiteName, p.idPublicacao, pi.investigador, i.tipo AS investigador_tipo
+                FROM publicacoes p
+                LEFT JOIN publicacoes_tipos pt ON p.tipo = pt.valor_API
+                INNER JOIN publicacoes_investigadores pi ON p.idPublicacao = pi.publicacao
+                INNER JOIN investigadores i ON i.id = pi.investigador
+                WHERE visivelGeral = true
+                ORDER BY publication_year DESC, pt.$valorSiteName, p.data DESC";
 
-    $sql = "SELECT p.dados, YEAR(p.data) AS publication_year, p.tipo, pt.valor_site_pt, p.idPublicacao, pi.investigador, i.tipo AS investigador_tipo
-					FROM publicacoes p
-					LEFT JOIN publicacoes_tipos pt ON p.tipo = pt.valor_API
-					INNER JOIN publicacoes_investigadores pi ON p.idPublicacao = pi.publicacao
-					INNER JOIN investigadores i ON i.id = pi.investigador
-					WHERE visivelGeral = true
-					ORDER BY publication_year DESC, pt.valor_site_pt, p.data DESC";
-
-    $stmt = mysqli_prepare($conn, $sql);
-    mysqli_stmt_execute($stmt);
-    $result = mysqli_stmt_get_result($stmt);
-    // Array que irá conter todas as publicações do investigador
-    $publications = array();
-    if ($result !== false) {
-        while ($row = mysqli_fetch_assoc($result)) {
-            // Guardar a row como um array no array publicações com a key sendo o seu id
-            $publications[$row["idPublicacao"]] = $row;
-        }
+$stmt = mysqli_prepare($conn, $sql);
+mysqli_stmt_execute($stmt);
+$result = mysqli_stmt_get_result($stmt);
+// Array que irá conter todas as publicações do investigador
+$publications = array();
+if ($result !== false) {
+    while ($row = mysqli_fetch_assoc($result)) {
+        // Guardar a row como um array no array publicações com a key sendo o seu id
+        $publications[$row["idPublicacao"]] = $row;
     }
-    mysqli_stmt_close($stmt);
+}
+mysqli_stmt_close($stmt);
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 	//Guardar os resultados da publicacoes selecionadas como visíveis, e os não selecionados como não visíveis
 	if (isset($_POST["saveChanges"])) {
@@ -84,27 +90,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     Remover Publicações
                 </h3><br><br>
                 <?php
-                if (!isset($_SESSION["lang"])) {
-                    $lang = "pt";
-                } else {
-                    $lang = $_SESSION["lang"];
-                }
-                $valorSiteName = "valor_site_$lang";
-                $sql = "SELECT p.dados, YEAR(p.data) AS publication_year, p.tipo, pt.valor_site_pt, p.idPublicacao, pi.investigador, i.tipo AS investigador_tipo
-								FROM publicacoes p
-								LEFT JOIN publicacoes_tipos pt ON p.tipo = pt.valor_API
-								INNER JOIN publicacoes_investigadores pi ON p.idPublicacao = pi.publicacao
-								INNER JOIN investigadores i ON i.id = pi.investigador
-								WHERE visivelGeral = true
-								ORDER BY publication_year DESC, pt.valor_site_pt, p.data DESC";
-
-				$stmt = mysqli_prepare($conn, $sql);
-				mysqli_stmt_execute($stmt);
-				$publicacoes = mysqli_stmt_get_result($stmt);
-				mysqli_stmt_close($stmt);
 
                 $groupedPublicacoes = array();
-                foreach ($publicacoes as $publicacao) {
+                foreach ($publications as $publicacao) {
 					//print_r($publicacao);
                     $year = $publicacao['publication_year'];
                     if ($year == null) {
@@ -183,7 +171,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                             var tipo = <?= json_encode($publicacao[3]) ?>.toLowerCase();
                                             
                                             var invLink = document.createElement('a');
-                                            invLink.href = '../../tecnart/${tipo}.php?${tipo}=<?= json_encode($publicacao[2]) ?>';
+                                            invLink.href = `../../tecnart/${tipo}.php?${tipo}=<?= json_encode($publicacao[2]) ?>`;
                                             invLink.textContent = 'Investigador';
                                             invLink.classList.add('mr-3');
                                             invLink.style.alignContent = 'center';
