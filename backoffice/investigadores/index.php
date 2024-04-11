@@ -1,19 +1,79 @@
 <?php
+/**
+ * Inclui arquivos e configurações necessárias
+ */
 require "../verifica.php";
 require "../config/basedados.php";
 
 $find = "";
 
+/**
+ * Função para alterar a chave de idioma para a tradução desejada
+ * @param string $key Chave a ser traduzida
+ * @return string String traduzida se encontrada, string vazia caso contrário
+ */
+function change_lan($key) {
+    $translations = array(
+        "previous" => "Anterior",
+        "next" => "Próximo",
+    );
 
+    return isset($translations[$key]) ? $translations[$key] : "";
+}
+
+/**
+ * Consulta SQL para recuperar dados com paginação
+ */
 $sql = "SELECT id, nome, email, ciencia_id, sobre, tipo, fotografia, areasdeinteresse, orcid, scholar FROM investigadores 
 ORDER BY CASE WHEN tipo = 'Externo' THEN 1 ELSE 0 END, tipo DESC, nome;";
 $result = mysqli_query($conn, $sql);
 
+/**
+ * Define a variável de sessão 'anoRelatorio' se enviada via POST
+ */
 if (isset($_POST["anoRelatorio"])) {
-	$_SESSION["anoRelatorio"] = $_POST["anoRelatorio"];
+    $_SESSION["anoRelatorio"] = $_POST["anoRelatorio"];
 }
 
+/**
+ * Define idioma e outras configurações
+ */
+$language = ($_SESSION["lang"] == "en") ? "_en" : "";
+$pdo = pdo_connect_mysql();
+$records_per_page = 12;
+
+/**
+ * Obtém o número total de registros para paginação
+ */
+$total_records_query = $pdo->query("SELECT COUNT(*) FROM investigadores WHERE tipo = 'Integrado'");
+$total_records = $total_records_query->fetchColumn();
+$total_pages = ceil($total_records / $records_per_page);
+$remaining_records = $total_records % $records_per_page;
+if ($remaining_records > 0) {
+    $total_pages++;
+}
+
+/**
+ * Obtém o número da página atual ou define como 1 por padrão
+ */
+$page = isset($_GET['page']) ? $_GET['page'] : 1;
+$page = max(1, min($total_pages, intval($page)));
+
+$start_from = ($page - 1) * $records_per_page;
+
+/**
+ * Consulta para buscar dados com paginação
+ */
+$query = "SELECT id, email, nome,
+        COALESCE(NULLIF(sobre{$language}, ''), sobre) AS sobre,
+        COALESCE(NULLIF(areasdeinteresse{$language}, ''), areasdeinteresse) AS areasdeinteresse,
+        ciencia_id, tipo, fotografia, orcid, scholar, research_gate, scopus_id
+        FROM investigadores ORDER BY nome
+        LIMIT $start_from, $records_per_page";
+$result = mysqli_query($conn, $query);
 ?>
+
+
 <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 </link>
 
@@ -26,6 +86,8 @@ if (isset($_POST["anoRelatorio"])) {
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
 <script src="../assets/js/citation-js-0.6.8.js"></script>
+
+
 
 <style type="text/css">
 	<?php
@@ -140,6 +202,27 @@ if (@$_SESSION["anoRelatorio"] != "") {
 		</div>
 	</div>
 </div>
+
+<!-- Pagination section -->
+<div class="pagination_container">
+    <ul class="pagination justify-content-center">
+        <!-- Previous page link -->
+        <li class="page-item <?= $page <= 1 ? 'disabled' : '' ?>">
+            <a class="page-link" href="?page=<?= $page - 1 ?>" tabindex="-1"><?= change_lan("previous") ?></a>
+        </li>
+        <!-- Page links -->
+        <?php for ($i = 1; $i <= $total_pages; $i++) : ?>
+            <li class="page-item <?= $page == $i ? 'active' : '' ?>">
+                <a class="page-link" href="?page=<?= $i ?>"><?= $i ?></a>
+            </li>
+        <?php endfor; ?>
+        <!-- Next page link -->
+        <li class="page-item <?= $page >= $total_pages ? 'disabled' : '' ?>">
+            <a class="page-link" href="?page=<?= $page + 1 ?>"><?= change_lan("next") ?></a>
+        </li>
+    </ul>
+</div>
+            <!-- End pagination section -->
 
 <script>
 	const Cite = require('citation-js');
@@ -260,3 +343,4 @@ if (@$_SESSION["anoRelatorio"] != "") {
 		});
 	});
 </script>
+
