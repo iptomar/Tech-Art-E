@@ -2,24 +2,6 @@
 include 'config/dbconnection.php';
 include 'models/functions.php';
 
-function toJson($str) {
-    // Regular expression pattern to extract key-value pairs
-    $pattern = '/(\w+)\s*=\s*(\{.*?\}|[^{},]+)(?:,|\s*})/';
-
-    // Match all key-value pairs
-    preg_match_all($pattern, $str, $matches, PREG_SET_ORDER);
-
-    $data = [];
-    foreach ($matches as $match) {
-        $key = trim($match[1]);
-        $value = trim($match[2], '{}');
-        $data[$key] = $value;
-    }
-
-    // Encode array into JSON
-    return json_encode($data, JSON_PRETTY_PRINT);
-}
-
 ?>
 
 <?= template_header('Publicações'); ?>
@@ -78,45 +60,19 @@ function toJson($str) {
                             <?php foreach ($yearPublica as $site => $publicacoes) : ?>
                                 <div style="margin-left: 10px;" class="mt-3"><b><?= $site ?></b><br></div>
                                 <div style="margin-left: 20px;" id="publications<?= $year ?><?= $site ?>">
-
-                                    <script>
-                                        <?php
-                                            $publicacoesJson = [];
-
-                                            foreach ($publicacoes as $publicacao) {
-                                                // Add JSON to the entries array
-                                                $publicacoesJson[] = toJson($publicacao);
-                                            }
-                                        ?>
-
-                                        var publicacoes = <?= json_encode($publicacoesJson) ?>;
-
-                                        var publicacoesFiltradas = [...new Map(publicacoes.map(item => {
-                                            item = JSON.parse(item);
-                                            let url = item['url'] ? item['url'].toLowerCase().replace(/^http:\/\/dx.doi.org/, 'https:\/\/doi.org') : '';
-                                            url = url ? url.replace(/^http:/, 'https:') : '';
-                                            return [url === '' ? item['title'] : url, item];
-                                        })).values()]
-
-                                        <?php foreach ($publicacoes as $publicacao) : ?>
-
-                                            var publicacao = <?= toJson($publicacao) ?>;
-                                            
-                                            if (publicacoesFiltradas.some(e => e.title === publicacao.title)) {
-                                                var formattedCitation = new Cite(<?= json_encode($publicacao) ?>).format('bibliography', {
-                                                    format: 'html',
-                                                    template: 'apa',
-                                                    lang: 'en-US'
-                                                });
-                                                var citationContainer = document.createElement('div');
-                                                citationContainer.innerHTML = formattedCitation;
-                                                citationContainer.classList.add('mb-3');
-                                                document.getElementById('publications<?= $year ?><?= $site ?>').appendChild(citationContainer);
-
-                                                publicacoesFiltradas = publicacoesFiltradas.filter(e => e.title !== publicacao.title);
-                                            }
-                                        <?php endforeach; ?>
-                                    </script>
+                                    <?php foreach ($publicacoes as $publicacao) : ?>
+                                        <script>
+                                        var formattedCitation = new Cite(<?= json_encode($publicacao) ?>).format('bibliography', {
+                                                format: 'html',
+                                                template: 'apa',
+                                                lang: 'en-US'
+                                            });;
+                                            var citationContainer = document.createElement('div');
+                                            citationContainer.innerHTML = formattedCitation;
+                                            citationContainer.classList.add('mb-3');
+                                            document.getElementById('publications<?= $year ?><?= $site ?>').appendChild(citationContainer);
+                                        </script>
+                                    <?php endforeach; ?>
                                 </div>
                             <?php endforeach; ?>
                         </div><br>
