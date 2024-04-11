@@ -78,6 +78,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 		}
 		mysqli_stmt_close($stmt);
 	}
+
+    header('Location: ./');
 }
 
 ?>
@@ -175,6 +177,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                             invLink.textContent = 'Investigador';
                                             invLink.classList.add('mr-3');
                                             invLink.style.alignContent = 'center';
+                                            invLink.style.display = 'grid';
 
                                             citationContainer.appendChild(checkboxInv);
                                             citationContainer.appendChild(invLink);
