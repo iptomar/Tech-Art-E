@@ -489,7 +489,6 @@ function show_error($error)
 </div>';
 }
 
-
 function change_lan($key) {
   $translations = array(
       "previous" => "Previous",

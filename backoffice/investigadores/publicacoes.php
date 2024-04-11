@@ -656,25 +656,34 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     //Guardar os resultados da publicacoes selecionadas como visíveis, e os não selecionados como não visíveis
     if (isset($_POST["saveChanges"])) {
         // Preparar comando SQL
-        $sql = "UPDATE publicacoes SET visivel = ? WHERE idPublicacao = ?";
+        $sql = "UPDATE publicacoes SET visivel = ?, visivelGeral = ? WHERE idPublicacao = ?";
         $stmt = mysqli_prepare($conn, $sql);
 
         // Vincular parâmetros
-        mysqli_stmt_bind_param($stmt, "is", $visibility, $checkboxId);
+        mysqli_stmt_bind_param($stmt, "iis", $visibility, $visibilitySite, $checkboxId);
 
         //Obter as os ids de todas as publicações do investigador
         $existingIds = array_keys($publications);
 
         // Percorrer todas as publicações do investigador
         foreach ($existingIds as $checkboxId) {
+            // Checkboxs não está selecionado, definir visivel como 0
+            $visibility = 0;
+            $visibilitySite = 0;
+
             // Verificar se o idCheckbox está presente nos dados POST
-            if (isset($_POST["publicacao"][$checkboxId])) {
-                // Checkbox está selecionado, definir visivel como 1
+            if (isset($_POST["publicacao"][$checkboxId])) 
+            {
+                // Checkbox Investigador está selecionado, definir visivel como 1
                 $visibility = 1;
-            } else {
-                // Checkbox não está selecionado, definir visivel como 0
-                $visibility = 0;
             }
+            
+            if (isset($_POST["publicacoes"][$checkboxId]))
+            {
+                // Checkbox Geral está selecionado, definir visivel como 1
+                $visibilitySite = 1;
+            }
+
             mysqli_stmt_execute($stmt);
         }
         mysqli_stmt_close($stmt);
@@ -693,8 +702,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $loginAPI = USERCIENCIA;
         $passwordAPI = PASSWORDCIENCIA;
 
-        $url = "https://qa.cienciavitae.pt/api/v1.1/curriculum/" . $cienciaId . "/output/cached?lang=User%20defined";
-        //$url = "https://api.cienciavitae.pt/v1.1/curriculum/" . $cienciaId . "/output/cached?lang=User%20defined";
+        //$url = "https://qa.cienciavitae.pt/api/v1.1/curriculum/" . $cienciaId . "/output/cached?lang=User%20defined";
+        $url = "https://api.cienciavitae.pt/v1.1/curriculum/" . $cienciaId . "/output/cached?lang=User%20defined";
         
         
         $ch = curl_init();
@@ -865,7 +874,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 }
 
 // Consulta para buscar todas as publicações do investigador
-$sql = "SELECT p.idPublicacao, p.dados, p.visivel, p.tipo, p.data
+$sql = "SELECT p.idPublicacao, p.dados, p.visivel, p.visivelGeral, p.tipo, p.data
         FROM publicacoes p
         INNER JOIN publicacoes_investigadores pi ON p.idPublicacao = pi.publicacao
         WHERE pi.investigador = ? ORDER BY p.tipo ASC, p.data DESC";
@@ -923,7 +932,9 @@ mysqli_close($conn);
 
 <div class="container-xl mt-5">
     <div class="card">
-        <h5 class="card-header text-center">Selecionar Publicações do Investigador <?php echo $nome ?></h5>
+        <h5 class="card-header text-center">Selecionar Publicações do Investigador <?= $nome ?></h5>
+        <p class="text-center mt-3">Ao selecionar novas publicações verifique se estas já estão visíveis na página <a href="/tecnart/publicacoes.php">Publicações </a>.</p>
+        <p class="text-center">As "checkboxes" da esquerda definem a visibilidade das publicações no seu perfil, as da direita na página antes referida.</p>
         <div class="card-body">
 
             <!-- Botão de Atualizar Dados com a API -->
@@ -962,7 +973,7 @@ mysqli_close($conn);
         });;
     }
 
-    var publicacoesInfo = <?php echo json_encode($publicacoesInfo); ?>;
+    var publicacoesInfo = <?= json_encode($publicacoesInfo); ?>;
 
     var publicacoesDiv = document.getElementById('publicacoes');
 
@@ -1003,21 +1014,35 @@ mysqli_close($conn);
                 var container = document.createElement('div');
                 container.classList.add('form-check', 'mb-3');
 
-                // Criar a caixa de seleção
-                var checkbox = document.createElement('input');
-                checkbox.type = 'checkbox';
-                checkbox.name = 'publicacao[' + publicacao.idPublicacao + ']';
-                checkbox.value = publicacao.idPublicacao;
-                checkbox.checked = publicacao.visivel;
-                checkbox.classList.add('form-check-input');
+                // Criar a caixa de seleção das publicaçoes do investigador
+                var checkboxInv = document.createElement('input');
+                checkboxInv.type = 'checkbox';
+                checkboxInv.name = 'publicacao[' + publicacao.idPublicacao + ']';
+                checkboxInv.value = publicacao.idPublicacao;
+                checkboxInv.checked = publicacao.visivel;
+                checkboxInv.classList.add('form-check-input');
+                checkboxInv.classList.add('ml-1');
+                checkboxInv.classList.add('publicacao');
+
+                // Criar a caixa de seleção das publicaçoes do site
+                var checkboxSite = document.createElement('input');
+                checkboxSite.type = 'checkbox';
+                checkboxSite.name = 'publicacoes[' + publicacao.idPublicacao + ']';
+                checkboxSite.value = publicacao.idPublicacao;
+                checkboxSite.checked = publicacao.visivelGeral;
+                checkboxSite.classList.add('form-check-input');
+                checkboxSite.classList.add('ml-4');
+                checkboxSite.classList.add('publicacoes');
 
                 // Criar um div para o conteúdo
                 var contentDiv = document.createElement('div');
                 contentDiv.innerHTML = getAPA(publicacao.dados);
                 contentDiv.classList.add('form-check-label');
+                contentDiv.classList.add('ml-5');
 
                 // Anexar a caixa de seleção e o conteúdo ao contentor
-                container.appendChild(checkbox);
+                container.appendChild(checkboxInv);
+                container.appendChild(checkboxSite);
                 container.appendChild(contentDiv);
 
                 // Anexar o contentor da publicação ao contentor do tipo
@@ -1029,9 +1054,8 @@ mysqli_close($conn);
         }
     }
 
-
-    window.addEventListener('DOMContentLoaded', function() {
-        const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+    function handleCheckboxes(className) {
+        const checkboxes = document.querySelectorAll(`.${className}`);
         let lastChecked;
 
         function handleCheck(event) {
@@ -1052,5 +1076,8 @@ mysqli_close($conn);
         }
 
         checkboxes.forEach(checkbox => checkbox.addEventListener('click', handleCheck));
-    });
+    }
+
+    window.addEventListener('DOMContentLoaded', handleCheckboxes('publicacao'));
+    window.addEventListener('DOMContentLoaded', handleCheckboxes('publicacoes'));
 </script>

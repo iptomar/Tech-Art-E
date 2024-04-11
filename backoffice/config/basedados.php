@@ -1,10 +1,10 @@
 <?php
 require 'credentials.php';
 
-
 $servername = "94.46.180.24";
-$username = 'jmrrg';
-$password = '12345678';
+$username = 'costa';
+$password = '12345';
+
 $dbname = "Tech-Art";
 $charset = "utf8mb4";
 
