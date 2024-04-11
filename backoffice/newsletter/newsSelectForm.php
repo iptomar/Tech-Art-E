@@ -100,10 +100,43 @@
                             echo "0 resultados";
                         }
 
+                    ?>
+                    </div>
+                    <hr>
+                    <div class="project-list">
+                    <?php
+                        $sql = "SELECT nome, fotografia, email FROM investigadores ORDER BY nome";
+                        $result = $conn->query($sql);
+                        // Verifica se há resultados e exibe os projetos
+                        echo '<div class="project">';
+                        echo '<img src="../assets/investigadores/newlletter.avif" class="project-image" alt="Newsletter">';
+                        echo '<div class="project-info">';
+                        echo '<h3>Newsletter</h3>';
+                        echo '<p>Todos os emails subscritos à newsletter</p>';
+                        echo '<input type="checkbox" class="checkbox">';
+                        echo '</div>';
+                        echo '</div>';
+
+                        if ($result->num_rows > 0) {
+                            while($row = $result->fetch_assoc()) {
+                                echo '<div class="project">';
+                                echo '<img src="../assets/investigadores/' . $row["fotografia"] . '" class="project-image" alt="' . $row["nome"] . '">';
+                                echo '<div class="project-info">';
+                                echo '<h3>' . $row["nome"] . '</h3>';
+                                echo '<p>' . $row["email"] . '</p>';
+                                echo '<input type="checkbox" class="checkbox">';
+                                echo '</div>';
+                                echo '</div>';
+                            }
+                        } else {
+                            echo "0 resultados";
+                        }
+                        
                         // Fecha conexão
                         $conn->close();
                     ?>
                     </div>
+
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-primary" onclick="concluir()">Selecionar</button>
