@@ -36,46 +36,71 @@ $mail->AddAddress("tiago_oliveira2001@hotmail.com", "recipient-name");
 $mail->SetFrom("tiago0liveira.dev.test@gmail.com", "TechnArt");
 //$mail->AddReplyTo("iago_oliveira2001@hotmail.com", "reply-to-name");
 //$mail->AddCC("iago_oliveira2001@hotmail.com", "cc-recipient-name");
+$mail->addCustomHeader("MIME-Version", "1.0");
+$mail->addCustomHeader("Content-type", "text/html;charset=UTF-8");
+
 $mail->Subject = "TechnArt - Newsletter";
+
 
 $content = '';
 
-// Adiciona o cabeçalho do e-mail ao conteúdo
-$content .= '<!DOCTYPE html>';
-$content .= '<html lang="pt">';
-$content .= '<head>';
-$content .= '<meta charset="UTF-8">';
-$content .= '<meta name="viewport" content="width=device-width, initial-scale=1.0">';
-$content .= '<title>TechnArt - Newsletter</title>';
-$content .= '<style>';
-// Estilos CSS aqui (opcional)
-$content .= '</style>';
-$content .= '</head>';
-$content .= '<body>';
+$content = '
+      <!DOCTYPE html>
+      <html lang="en">
+      <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Email</title>
+      <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+      }
+      .x_container {
+        max-width: 90%;
+        padding: 8px;
+      }
+      .x_project-info {
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+      }
+      .x_project-text {
+        margin-left: 20px;
+      }
+      h2 {
+        color: #333;
+      }
+      p {
+        color: #666;
+      }
+      .x_project-image {
+        height: 90%;
+        width: auto;
+        max-height: 90%;
+      }
+      </style>
+      </head>
+      <body>
+      ';
 
 // Adiciona o corpo do e-mail ao conteúdo
-$content .= '<div>';
-//$content .= '<h1>Olá, ' . $nome . '!</h1>';
+$content .= '<div class="container">';
 $content .= '<h1> TechnArt - Newsletter </h1>';
 
+
 foreach ($dadosEmail as $projeto) {
-  echo $projeto . '; ';
-
   $array = explode("||", $projeto);
-
-  $imgtest = "5c.JPG";
-  
+  $content .= '<div style="margin-bottom: 20px; display: flex; align-items: center;">';
+  $content .= "<img src='http://novotechneart.ipt.pt/backoffice/assets/projetos/" .$array[2]. "' class='project-image' alt='ImagemProjeto' width='350' height='250'>";
+  $content .= '<div style="margin-left: 20px;">';
   $content .= "<p><b>" . $array[0] . "</b></p>";
   $content .= "<p>" . $array[1] . "</p>";
-  $content .= "<p> <img src='http://novotechneart.ipt.pt/backoffice/assets/projetos/" .$array[2]. "' class='project-image' alt='ImagemProjeto'></p>";
+  $content .= "</div>";
+  $content .= "</div>";
 }
-
-$content .= '</div>';
-$content .= '<div>';
-$content .= '<p>Mais info ...</p>';
-$content .= '</div>';
-
-// Fecha o corpo do e-mail
+$content .= "</div>";
 $content .= '</body>';
 $content .= '</html>';
 
