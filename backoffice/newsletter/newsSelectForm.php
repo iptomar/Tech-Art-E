@@ -88,7 +88,7 @@
                         if ($result->num_rows > 0) {
                             while($row = $result->fetch_assoc()) {
                                 echo '<div class="project">';
-                                echo '<img src="../assets/projetos/' . $row["fotografia"] . '" class="project-image" alt="' . $row["nome"] . '">';
+                                echo '<img src="../assets/projetos/' . $row["fotografia"] . '" class="project-image" alt="' . $row["nome"] . '" id="'.$row["fotografia"].'">';
                                 echo '<div class="project-info">';
                                 echo '<h3>' . $row["nome"] . '</h3>';
                                 echo '<p>' . $row["descricao"] . '</p>';
@@ -137,7 +137,10 @@
             checkboxes.forEach(function(checkbox) {
                 if (checkbox.checked) {
                     verificarCheckbox = true;
-                    var projeto = checkbox.parentElement.querySelector('h3').textContent + "||" + checkbox.parentElement.querySelector('p').textContent;
+                    var titulo = checkbox.parentElement.querySelector('h3').textContent;
+                    var desc = checkbox.parentElement.querySelector('p').textContent
+                    var imgid = checkbox.parentElement.parentElement.querySelector('img').id;
+                    var projeto = titulo + "||" + desc  + "||" + imgid;
                     checkedItems.push(projeto);
                 }
             });

@@ -25,15 +25,15 @@ $mail->SMTPAuth   = TRUE;
 $mail->SMTPSecure = "tls";
 $mail->Port       = 587;
 $mail->Host       = "smtp.gmail.com";
-$mail->Username   = "";
-$mail->Password   = "";
+$mail->Username   = "tiago0liveira.dev.test@gmail.com";
+$mail->Password   = "zpzr aewz cxda brjm";
 
 $mail->CharSet = "UTF-8";
 $mail->Encoding = "base64";
 
 $mail->IsHTML(true);
 $mail->AddAddress("tiago_oliveira2001@hotmail.com", "recipient-name");
-$mail->SetFrom("", "TechnArt");
+$mail->SetFrom("tiago0liveira.dev.test@gmail.com", "TechnArt");
 //$mail->AddReplyTo("iago_oliveira2001@hotmail.com", "reply-to-name");
 //$mail->AddCC("iago_oliveira2001@hotmail.com", "cc-recipient-name");
 $mail->Subject = "TechnArt - Newsletter";
@@ -67,7 +67,7 @@ foreach ($dadosEmail as $projeto) {
   
   $content .= "<p><b>" . $array[0] . "</b></p>";
   $content .= "<p>" . $array[1] . "</p>";
-  $content .= "<p> <img src='../assets/projetos/'". $imgtest . " class='project-image' alt='ImagemProjeto'></p>";
+  $content .= "<p> <img src='http://novotechneart.ipt.pt/backoffice/assets/projetos/" .$array[2]. "' class='project-image' alt='ImagemProjeto'></p>";
 }
 
 $content .= '</div>';
