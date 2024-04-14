@@ -89,10 +89,11 @@ $result = mysqli_query($conn, $sql);
 								$isManager = 0;
 								if (mysqli_num_rows($result1) > 0) {
 									while (($row1 = mysqli_fetch_assoc($result1))) {
-										$selected[] = $row1['investigadores_id'];
+										//$selected[] = $row1['investigadores_id'];
+										$isManager = $row1['isManager'];
 									}
 								}
-								if ($_SESSION["autenticado"] == "administrador" || in_array($_SESSION["autenticado"], $selected)) {
+								if ($_SESSION["autenticado"] == "administrador" || $isManager == 1  /*|| in_array($_SESSION["autenticado"], $selected)*/) {
 									echo "<td><a href='edit.php?id=" . $row["id"] . "' class='btn btn-primary'><span>Alterar</span></a></td>";
 									echo "<td><a href='remove.php?id=" . $row["id"] . "' class='btn btn-danger'><span>Apagar</span></a></td>";
 								}
