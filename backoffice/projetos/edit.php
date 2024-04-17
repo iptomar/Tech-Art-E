@@ -18,6 +18,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $site = $_POST["site"];
     $facebook = $_POST["facebook"];
     $investigadores = [];
+    $managers = [];
     $nome_en = $_POST["nome_en"];
     $descricao_en = $_POST["descricao_en"];
     $sobreprojeto_en = $_POST["sobreprojeto_en"];
@@ -29,6 +30,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $facebook_en = $_POST["facebook_en"];
     if (isset($_POST["investigadores"])) {
         $investigadores = $_POST["investigadores"];
+        print_r($investigadores);
+    }
+    if (isset($_POST["managers"])) {
+        $managers = $_POST["managers"];
+        print_r($managers);
     }
     $fotografia_exists = isset($_FILES["fotografia"]) && $_FILES["fotografia"]["size"] != 0;
 
@@ -52,21 +58,29 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 
     if (mysqli_stmt_execute($stmt)) {
-        if (count($investigadores) == 0) {
+        if (count($investigadores) == 0 && count($managers) == 0 ) {
             header('Location: index.php');
             return;
         }
+
         $sqlinsert = "";
         foreach ($investigadores as $investigadorid) {
-            $sqlinsert = $sqlinsert . "($investigadorid,$id),";
+            $isManager = 0;
+            if (in_array($investigadorid, $managers)) {
+                $isManager = 1;
+            }
+            $sqlinsert = $sqlinsert . "($investigadorid,$id,$isManager),";
         }
         $sqlinsert = rtrim($sqlinsert, ",");
+
         $sql = "DELETE FROM investigadores_projetos WHERE projetos_id = " . $id;
         mysqli_query($conn, $sql);
-        $sql = "INSERT INTO investigadores_projetos (investigadores_id,projetos_id) values" . $sqlinsert;
+
+        $sql = "INSERT INTO investigadores_projetos (investigadores_id,projetos_id,isManager) values" . $sqlinsert;
         print_r($sql);
+
         if (mysqli_query($conn, $sql)) {
-            header('Location: index.php');
+            //header('Location: index.php');
         } else {
             echo "Error: " . $sql . "<br>" . mysqli_error($conn);
         }
@@ -347,33 +361,46 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     </div>
                 </div>
 
-
-                <div class="form-group">
-                    <label>Investigadores/as</label><br>
-                    <?php
-                    $sql = "SELECT investigadores_id FROM investigadores_projetos WHERE projetos_id = " . $id;
-                    $result = mysqli_query($conn, $sql);
-                    $selected = array();
-                    if (mysqli_num_rows($result) > 0) {
-                        while (($row =  mysqli_fetch_assoc($result))) {
-                            $selected[] = $row['investigadores_id'];
-                        }
-                    }
-                    $sql = "SELECT id, nome, tipo FROM investigadores 
-                            ORDER BY CASE WHEN tipo = 'Externo' THEN 1 ELSE 0 END, tipo, nome;";
-                    $result = mysqli_query($conn, $sql);
-                    if (mysqli_num_rows($result) > 0) {
-                        while ($row = mysqli_fetch_assoc($result)) {
-                            if ($row["id"] == $_SESSION["autenticado"]) {
-                                echo "<input type='hidden' name='investigadores[]' value='" . $row["id"] . "'/>";
+                <div class="row">
+                    <div class="col">
+                        <div class="form-group">
+                            <label>Investigadores/as</label><br>
+                            <?php
+                            $sql = "SELECT investigadores_id FROM investigadores_projetos WHERE projetos_id = " . $id;
+                            $result = mysqli_query($conn, $sql);
+                            $selected = array();
+                            if (mysqli_num_rows($result) > 0) {
+                                while (($row =  mysqli_fetch_assoc($result))) {
+                                    $selected[] = $row['investigadores_id'];
+                                }
+                            }
+                            $sql = "SELECT id, nome, tipo FROM investigadores 
+                                    ORDER BY CASE WHEN tipo = 'Externo' THEN 1 ELSE 0 END, tipo, nome;";
+                            $result = mysqli_query($conn, $sql);
+                            if (mysqli_num_rows($result) > 0) {
+                                while ($row = mysqli_fetch_assoc($result)) {
+                                    if ($row["id"] == $_SESSION["autenticado"]) {
+                                        echo "<input type='hidden' name='investigadores[]' value='" . $row["id"] . "'/>";
+                                    } ?>
+                                    <input type="checkbox" <?= in_array($row["id"], $selected) || $row["id"] == $_SESSION["autenticado"] ? "checked" : "" ?> <?= $row["id"] == $_SESSION["autenticado"] ? "disabled" : "" ?> name="investigadores[]" value="<?= $row["id"] ?>">
+                                    <label><?= $row["tipo"] . " - " .  $row["nome"] ?></label><br>
+                            <?php }
                             } ?>
-                            <input type="checkbox" <?= in_array($row["id"], $selected) || $row["id"] == $_SESSION["autenticado"] ? "checked" : "" ?> <?= $row["id"] == $_SESSION["autenticado"] ? "disabled" : "" ?> name="investigadores[]" value="<?= $row["id"] ?>">
-                            <label><?= $row["tipo"] . " - " .  $row["nome"] ?></label><br>
-                    <?php }
-                    } ?>
-                    <!-- Error -->
+                            <!-- Error -->
 
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="form-group">
+                            <label>Gestores de projetos:</label><br>
+                            <div id="managersContainer">
+
+                            </div> <!-- Container to hold dynamically created checkboxes -->
+                        </div>
+                    </div>
                 </div>
+
+                
 
 
                 <div class="form-group">
@@ -439,6 +466,138 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         checkboxes.forEach(checkbox => checkbox.addEventListener('click', handleCheck));
     });
 </script>
+
+<style>
+    /* Estilos para simular uma checkbox desabilitada */
+    .disabled-checkbox {
+        opacity: 0.5; /* Reduz a opacidade para indicar que está desativado */
+        pointer-events: none; /* Impede eventos de clique */
+        cursor: not-allowed; /* Altera o cursor para indicar que não está disponível */
+        filter: grayscale(100%); /* Aplica escala de cinza */
+    }
+</style>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        var investigadorCheckboxes = document.querySelectorAll('input[name="investigadores[]"]');
+        var managersContainer = document.getElementById('managersContainer');
+        var noManagersMessage = document.createElement('p');
+        noManagersMessage.textContent = "Tem que selecionar pelo menos um investigador para poder escolher gestores.";
+        noManagersMessage.style.fontWeight = "bold";
+
+        // Função para desativar um checkbox
+        function desativarCheckbox(checkbox) {
+            checkbox.classList.add('disabled-checkbox'); // Adiciona a classe para simular a checkbox desativada
+        
+        }
+
+        // Add selected investigadores to managers side
+        investigadorCheckboxes.forEach(function(checkbox) {
+            if (checkbox.checked) {
+                // Create a corresponding checkbox for manager
+                var managerCheckbox = document.createElement('input');
+                managerCheckbox.type = 'checkbox';
+                managerCheckbox.name = 'managers[]';
+                managerCheckbox.value = checkbox.value;
+                managersContainer.appendChild(managerCheckbox);
+
+                // Create a label for the manager checkbox
+                var managerLabel = document.createElement('label');
+                managerLabel.textContent = checkbox.nextElementSibling.textContent;
+                managersContainer.appendChild(managerLabel);
+
+                // Add line break
+                managersContainer.appendChild(document.createElement('br'));
+            }
+        });
+
+        // Check if managers container is empty and append message if so
+        if (managersContainer.children.length === 0) {
+            managersContainer.appendChild(noManagersMessage);
+        }
+
+        // Disable checkbox for logged-in user if present among managers
+        var loggedInUserId = "<?php echo $_SESSION["autenticado"]; ?>";
+        var managerCheckboxes = document.querySelectorAll('input[name="managers[]"]');
+        managerCheckboxes.forEach(function(managerCheckbox) {
+            if (managerCheckbox.value === loggedInUserId) {
+                desativarCheckbox(managerCheckbox); // Chama a função para desativar o checkbox
+            }
+        });
+
+        investigadorCheckboxes.forEach(function(checkbox) {
+            checkbox.addEventListener('change', function() {
+                if (checkbox.checked) {
+                    // Create a corresponding checkbox for manager
+                    var managerCheckbox = document.createElement('input');
+                    managerCheckbox.type = 'checkbox';
+                    managerCheckbox.name = 'managers[]';
+                    managerCheckbox.value = checkbox.value;
+                    managersContainer.appendChild(managerCheckbox);
+
+                    // Create a label for the manager checkbox
+                    var managerLabel = document.createElement('label');
+                    managerLabel.textContent = checkbox.nextElementSibling.textContent;
+                    managersContainer.appendChild(managerLabel);
+
+                    // Add line break
+                    managersContainer.appendChild(document.createElement('br'));
+                } else {
+                    // Remove the corresponding manager checkbox and label when unchecked
+                    var managerCheckboxes = document.querySelectorAll('input[name="managers[]"]');
+                    managerCheckboxes.forEach(function(managerCheckbox) {
+                        if (managerCheckbox.value === checkbox.value) {
+                          
+                            var br = managerCheckbox.nextSibling.nextSibling;
+                            if (br && br.tagName === "BR") {
+                                br.parentNode.removeChild(br);
+                            }
+                            // Remove label if it exists and is a sibling
+                            var label = managerCheckbox.nextSibling;
+                            if (label && label.tagName === "LABEL") {
+                                label.parentNode.removeChild(label);
+                            }
+
+                              // Remove checkbox
+                              managerCheckbox.parentNode.removeChild(managerCheckbox);
+                            // Remove line break if it exists and is a sibling
+                        }
+                    });
+                }
+
+                // Check if managers container is empty and append message if so
+                if (managersContainer.children.length === 0) {
+                    managersContainer.appendChild(noManagersMessage);
+                } else {
+                    // Remove the message if managers are present
+                    if (managersContainer.contains(noManagersMessage)) {
+                        managersContainer.removeChild(noManagersMessage);
+                    }
+                }
+
+            });
+        });
+    // Validate if investigadores who are managers should be checked
+    <?php
+        $sql = "SELECT investigadores_id, isManager FROM investigadores_projetos WHERE projetos_id = " . $id;
+        $result = mysqli_query($conn, $sql);
+        if (mysqli_num_rows($result) > 0) {
+            while (($row =  mysqli_fetch_assoc($result))) {
+                if ($row['isManager'] == 1) {
+                    echo "var managerCheckbox = document.querySelector('input[name=\"managers[]\"][value=\"" . $row['investigadores_id'] . "\"]');
+                          if (managerCheckbox) {
+                              managerCheckbox.checked = true;
+                          }";
+                }
+            }
+        }
+    ?>
+});
+</script>
+
+
+
+
 
 
 <?php
