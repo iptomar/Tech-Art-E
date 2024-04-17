@@ -1,3 +1,8 @@
+
+<?php
+require "../verifica.php";
+?>
+
 <!DOCTYPE html>
 <html lang="pt">
 
@@ -60,13 +65,29 @@
             /* Centraliza a checkbox à direita */
             margin-right: 10px;
         }
+
+        .box {
+            height: 100%;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .btn-center {
+            text-align: center;
+        }
+        
     </style>
 </head>
 
 <body>
-    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#projectPopUpList">
-        Ver Projetos
-    </button>
+    <div class="box">
+        <button type="button" class="btn btn-primary btn-lg btn-center" data-toggle="modal" data-target="#projectPopUpList">
+            Construir e Enviar Newsletter
+        </button>
+    </div>
+    
 
     <!-- Modal com lista de projetos-->
     <div class="modal" id="projectPopUpList" tabindex="-1" role="dialog">

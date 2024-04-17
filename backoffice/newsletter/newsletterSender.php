@@ -10,9 +10,9 @@ header('Content-Type: text/html; charset=utf-8');
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
-require 'lib/Exception.php';
-require 'lib/PHPMailer.php';
-require 'lib/SMTP.php';
+require '../../libraries/lib-smtp/Exception.php';
+require '../../libraries/lib-smtp/PHPMailer.php';
+require '../../libraries/lib-smtp/SMTP.php';
 
 // Receber os dados do e-mail do JavaScript
 $checkedItems = json_decode(file_get_contents('php://input'), true);
