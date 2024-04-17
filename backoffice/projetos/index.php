@@ -2,7 +2,18 @@
 require "../verifica.php";
 require "../config/basedados.php";
 
-$sql = "SELECT id, nome, referencia, areapreferencial, financiamento,fotografia, concluido FROM projetos ORDER BY nome";
+/**
+ * 
+ * Query obtém todos os projetos relacionados com o investigador logado
+ * Se for admin logado, mostra todos os projetos
+ * 
+ */
+$innerjoinSQL = "";
+$autenticado = $_SESSION["autenticado"];
+if($autenticado != "administrador"){
+	$innerjoinSQL = "inner join investigadores_projetos inpj on pj.id = inpj.projetos_id where inpj.investigadores_id = '$autenticado'";
+}
+$sql = "SELECT id, nome, referencia, areapreferencial, financiamento,fotografia, concluido FROM projetos pj $innerjoinSQL ORDER BY nome";
 $result = mysqli_query($conn, $sql);
 
 ?>
@@ -72,15 +83,17 @@ $result = mysqli_query($conn, $sql);
 								/*             echo "<td>".$row["ambito"]."</td>";
 							 */
 								echo "<td><img src='../assets/projetos/$row[fotografia]' width = '100px' height = '100px'></td>";
-								$sql1 = "SELECT investigadores_id FROM investigadores_projetos WHERE projetos_id = " . $row["id"];
+								$sql1 = "SELECT investigadores_id, isManager FROM investigadores_projetos WHERE projetos_id = " . $row["id"];
 								$result1 = mysqli_query($conn, $sql1);
-								$selected = array();
+								//$selected = array();
+								$isManager = 0;
 								if (mysqli_num_rows($result1) > 0) {
 									while (($row1 = mysqli_fetch_assoc($result1))) {
-										$selected[] = $row1['investigadores_id'];
+										//$selected[] = $row1['investigadores_id'];
+										$isManager = $row1['isManager'];
 									}
 								}
-								if ($_SESSION["autenticado"] == "administrador" || in_array($_SESSION["autenticado"], $selected)) {
+								if ($_SESSION["autenticado"] == "administrador" || $isManager == 1  /*|| in_array($_SESSION["autenticado"], $selected)*/) {
 									echo "<td><a href='edit.php?id=" . $row["id"] . "' class='btn btn-primary'><span>Alterar</span></a></td>";
 									echo "<td><a href='remove.php?id=" . $row["id"] . "' class='btn btn-danger'><span>Apagar</span></a></td>";
 								}
