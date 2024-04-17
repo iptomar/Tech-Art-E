@@ -24,6 +24,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $financiamento = $_POST["financiamento"];
     $ambito = $_POST["ambito"];
     $investigadores = [];
+    $managers = [];
     $concluido = isset($_POST['concluido']) ? 1 : 0;
     $site = $_POST["site"];
     $facebook = $_POST["facebook"];
@@ -40,6 +41,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (isset($_POST["investigadores"])) {
         $investigadores = $_POST["investigadores"];
     }
+    
+    if (isset($_POST["managers"])) {
+        $managers = $_POST["managers"];
+    }
+
+
     if (mysqli_stmt_execute($stmt)) {
         if (count($investigadores) == 0) {
             header('Location: index.php');
@@ -47,10 +54,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
         $sqlinsert = "";
         foreach ($investigadores as $id) {
-            $sqlinsert = $sqlinsert . "($id,last_insert_id()),";
+            $isManager = 0;
+            if (in_array($id, $managers)) {
+                $isManager = 1;
+            }
+            $sqlinsert = $sqlinsert . "($id,last_insert_id(),$isManager),";
         }
         $sqlinsert = rtrim($sqlinsert, ",");
-        $sql = "INSERT INTO investigadores_projetos (investigadores_id,projetos_id) values" . $sqlinsert;
+        $sql = "INSERT INTO investigadores_projetos (investigadores_id,projetos_id, isManager) values" . $sqlinsert;
         if (mysqli_query($conn, $sql)) {
             header('Location: index.php');
         } else {
@@ -298,24 +309,31 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     </div>
                 </div>
 
-                <div class="form-group">
-                    <label>Investigadores/as</label><br>
+                <div class="row">
+                    <div class="col">
+                        <div class="form-group">
+                            <label>Investigadores/as</label><br>
+                            <?php
+                            $sql = "SELECT id, nome, tipo FROM investigadores 
+                                    ORDER BY CASE WHEN tipo = 'Externo' THEN 1 ELSE 0 END, tipo, nome;";
+                            $result = mysqli_query($conn, $sql);
+                            if (mysqli_num_rows($result) > 0) {
+                                while ($row = mysqli_fetch_assoc($result)) { ?>
+                                    <input type="checkbox" name="investigadores[]" value="<?= $row["id"] ?>" class="investigador">
+                                    <label><?= $row["tipo"] . " - " .  $row["nome"] ?></label><br>
+                            <?php }
+                            } ?>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="form-group">
+                            <label>Gestores de projetos:</label><br>
+                            <div id="managersContainer">
 
-                    <?php
-                    $sql = "SELECT id, nome, tipo FROM investigadores 
-                        ORDER BY CASE WHEN tipo = 'Externo' THEN 1 ELSE 0 END, tipo, nome;";
-                    $result = mysqli_query($conn, $sql);
-                    if (mysqli_num_rows($result) > 0) {
-                        while ($row = mysqli_fetch_assoc($result)) { ?>
-                            <input type="checkbox" name="investigadores[]" value="<?= $row["id"] ?>">
-                            <label><?= $row["tipo"] . " - " .  $row["nome"] ?></label><br>
-                    <?php }
-                    } ?>
-
-                    <!-- Error -->
-                    <div class="help-block with-errors"></div>
+                            </div> <!-- Container to hold dynamically created checkboxes -->
+                        </div>
+                    </div>
                 </div>
-
 
                 <div class="form-group">
                     <label>Fotografia</label>
@@ -354,6 +372,89 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         });
     });
 </script>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    var investigadorCheckboxes = document.querySelectorAll('.investigador');
+    var managersContainer = document.getElementById('managersContainer');
+    var noManagersMessage = document.createElement('p');
+    noManagersMessage.textContent = "Tem que selecionar pelo menos um investigador para poder escolher gestores.";
+    noManagersMessage.style.fontWeight = "bold";
+
+    // Check if managers container is empty and append message if so
+    console.log("Number of children in managersContainer:", managersContainer.children.length);
+            if (managersContainer.children.length === 0) {
+                console.log("Appending message...");
+                managersContainer.appendChild(noManagersMessage);
+            } else {
+                // Remove the message if managers are present
+                if (managersContainer.contains(noManagersMessage)) {
+                    console.log("Removing message...");
+                    managersContainer.removeChild(noManagersMessage);
+                }
+            }
+
+    investigadorCheckboxes.forEach(function(checkbox) {
+        checkbox.addEventListener('change', function() {
+            if (checkbox.checked) {
+                // Create a corresponding checkbox for manager
+                var managerCheckbox = document.createElement('input');
+                managerCheckbox.type = 'checkbox';
+                managerCheckbox.name = 'managers[]';
+                managerCheckbox.value = checkbox.value;
+                managersContainer.appendChild(managerCheckbox);
+
+                // Create a label for the manager checkbox
+                var managerLabel = document.createElement('label');
+                managerLabel.textContent = checkbox.nextElementSibling.textContent;
+                managersContainer.appendChild(managerLabel);
+
+                // Add line break
+                managersContainer.appendChild(document.createElement('br'));
+            } else {
+                // Remove the corresponding manager checkbox and label when unchecked
+                var managerCheckboxes = document.querySelectorAll('input[name="managers[]"]');
+                managerCheckboxes.forEach(function(managerCheckbox) {
+                    if (managerCheckbox.value === checkbox.value) {
+                        // Remove checkbox
+ 
+                        // Remove line break if it exists and is a sibling
+                        var br = managerCheckbox.nextSibling.nextSibling;
+                        if (br && br.tagName === "BR") {
+                            br.parentNode.removeChild(br);
+                        }
+
+                        // Remove label if it exists and is a sibling
+                        var label = managerCheckbox.nextSibling;
+                        if (label && label.tagName === "LABEL") {
+                            label.parentNode.removeChild(label);
+                        }
+                        
+                        managerCheckbox.parentNode.removeChild(managerCheckbox);
+                    }
+                });
+            }
+
+            // Check if managers container is empty and append message if so
+            console.log("Number of children in managersContainer:", managersContainer.children.length);
+            if (managersContainer.children.length === 0) {
+                console.log("Appending message...");
+                managersContainer.appendChild(noManagersMessage);
+            } else {
+                // Remove the message if managers are present
+                if (managersContainer.contains(noManagersMessage)) {
+                    console.log("Removing message...");
+                    managersContainer.removeChild(noManagersMessage);
+                }
+            }
+
+        });
+    });
+});
+</script>
+
+
+
+
 
 <?php
 mysqli_close($conn);
