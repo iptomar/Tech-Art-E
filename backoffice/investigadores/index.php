@@ -38,7 +38,7 @@ if (isset($_POST["anoRelatorio"])) {
 /**
  * Define idioma e outras configurações
  */
-$language = ($_SESSION["lang"] == "en") ? "_en" : "";
+$language = isset($_SESSION["lang"]) && $_SESSION["lang"] == "en" ? "_en" : "";
 $pdo = pdo_connect_mysql();
 $records_per_page = 12;
 
@@ -149,6 +149,11 @@ if (@$_SESSION["anoRelatorio"] != "") {
 						</div>
 					<?php } ?>
 				</div>
+				<div class="row mt-3">
+					<div class="col">
+						<input type="text" id="searchInput" class="form-control" placeholder="Pesquisar...">
+					</div>
+    </div>
 			</div>
 			<table class="table table-striped table-hover">
 				<thead>
