@@ -26,12 +26,6 @@ function pdo_connect_mysql() {
     $charset = 'utf8mb4';
 
     $dsn = "mysql:host=$host;dbname=$db;charset=$charset";
-    //$dsn = "jdbc:mariadb://94.46.180.24:3306/Tech-Art";
-    // $options = [
-    //     PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
-    //     PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-    //     PDO::ATTR_EMULATE_PREPARES   => false,
-    // ];
 
     try {
         return new PDO($dsn, $user, $pass);
