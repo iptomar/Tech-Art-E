@@ -299,12 +299,20 @@ $change_lang =  function ($key) {
                                 </div>
                             </div>
                             </div>
+                            
                         </div>
+                        <!-- Formulário de inscrição na newsletter -->     
                     </div>
                 </div>
                 </footer>
                 <!-- footer end -->
                 <div class="cpy_">
+                            <p style="text-align: center; color: white; margin-bottom: 10px;">Subscreva a nossa newsletter</p>
+                            <form class="newsletter-form" method="post">
+                                <input type="email" name="email" placeholder="E-mail" required style="padding: 10px; width: 250px; border: 1px solid #ccc; border-radius: 5px; margin-right: 10px;">
+                                <button type="submit" style="padding: 10px 20px; background-color: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer;">Subscrever</button>
+                            </form>
+
                 <p class="mx-auto" style="font-size: 13px; padding-bottom: 20px;">
                 {$change_lang("ipt-copyright-txt")} | {$change_lang("all-rights-reserved-txt")} | 
                 <a style="font-size: 13px;" href="copyright.php">{$change_lang("copyright-title")}</a> 
@@ -353,7 +361,6 @@ $change_lang =  function ($key) {
                 <script src="./assets/vendors/jquery.ajaxchimp.min.js"></script>
                 <script src="./assets/vendors/mail-script.js"></script>
                 <script src="./assets/js/main2.js"></script>
-
 
                 <script type="text/javascript">
 
@@ -442,7 +449,40 @@ $change_lang =  function ($key) {
                   expires.setTime(expires.getTime() + (expiry * 24 * 60 * 60 * 1000));
                   document.cookie = key + '=' + value + ';expires=' + expires.toUTCString();
                 }
+            
             */
+            
+            $(document).ready(function() {
+              $('.newsletter-form').submit(function(e) {
+                  e.preventDefault(); // Evita o comportamento padrão de enviar o formulário
+          
+                  // Obtém os dados do formulário
+                  var formData = $(this).serialize();
+          
+                  // Obtém o campo de e-mail
+                  var emailInput = $(this).find('input[name="email"]');
+
+                  // Envia os dados do formulário para o script PHP usando AJAX
+                  $.ajax({
+                      type: 'POST',
+                      url: './newsletter/subscrever.php', // Caminho para o script PHP
+                      data: formData, // Dados do formulário
+                      dataType: 'json',
+                      success: function(response) {
+                          // Exibe um alerta com base na resposta recebida do script PHP
+                          alert(response.message);
+
+                          // Limpa o valor do campo de entrada de e-mail após o envio bem-sucedido
+                          emailInput.val('');
+                      },
+                      error: function() {
+                          // Exibe um alerta em caso de erro
+                          alert('Erro ao enviar a solicitação.');
+                      }
+                  });
+              });
+          });
+          
             
               </script>
 
