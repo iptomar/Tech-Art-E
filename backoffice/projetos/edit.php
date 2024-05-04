@@ -366,29 +366,38 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         <div class="form-group">
                             <label>Investigadores/as</label><br>
                             <?php
-                            $sql = "SELECT investigadores_id FROM investigadores_projetos WHERE projetos_id = " . $id;
-                            $result = mysqli_query($conn, $sql);
-                            $selected = array();
-                            if (mysqli_num_rows($result) > 0) {
-                                while (($row =  mysqli_fetch_assoc($result))) {
-                                    $selected[] = $row['investigadores_id'];
-                                }
-                            }
-                            $sql = "SELECT id, nome, tipo FROM investigadores 
-                                    ORDER BY CASE WHEN tipo = 'Externo' THEN 1 ELSE 0 END, tipo, nome;";
-                            $result = mysqli_query($conn, $sql);
-                            if (mysqli_num_rows($result) > 0) {
-                                while ($row = mysqli_fetch_assoc($result)) {
-                                    if ($row["id"] == $_SESSION["autenticado"]) {
-                                        echo "<input type='hidden' name='investigadores[]' value='" . $row["id"] . "'/>";
-                                    } ?>
-                                    <input type="checkbox" <?= in_array($row["id"], $selected) || $row["id"] == $_SESSION["autenticado"] ? "checked" : "" ?> <?= $row["id"] == $_SESSION["autenticado"] ? "disabled" : "" ?> name="investigadores[]" value="<?= $row["id"] ?>">
-                                    <label><?= $row["tipo"] . " - " .  $row["nome"] ?></label><br>
-                            <?php }
-                            } ?>
-                            <!-- Error -->
+$sql = "SELECT investigadores_id FROM investigadores_projetos WHERE projetos_id = " . $id;
+$result = mysqli_query($conn, $sql);
+$selected = array();
+if (mysqli_num_rows($result) > 0) {
+    while (($row =  mysqli_fetch_assoc($result))) {
+        $selected[] = $row['investigadores_id'];
+    }
+}
+?>
 
-                        </div>
+<input type="text" id="filtro" placeholder="Filtrar por nome">
+<button type="button" onclick="filtrarInvestigadores()">Filtrar</button>
+
+<div id="listaInvestigadores">
+    <?php
+    $sql = "SELECT id, nome, tipo FROM investigadores ORDER BY CASE WHEN tipo = 'Externo' THEN 1 ELSE 0 END, tipo, nome";
+    $result = mysqli_query($conn, $sql);
+    if (mysqli_num_rows($result) > 0) {
+        while ($row = mysqli_fetch_assoc($result)) {
+            if ($row["id"] == $_SESSION["autenticado"]) {
+                echo "<input type='hidden' name='investigadores[]' value='" . $row["id"] . "'/>";
+            }
+    ?>
+            <div class="investigador">
+                <input type="checkbox" <?= in_array($row["id"], $selected) || $row["id"] == $_SESSION["autenticado"] ? "checked" : "" ?> <?= $row["id"] == $_SESSION["autenticado"] ? "disabled" : "" ?> name="investigadores[]" value="<?= $row["id"] ?>">
+                <label><?= $row["tipo"] . " - " .  $row["nome"] ?></label>
+            </div>
+    <?php
+        }
+    }
+    ?>
+</div>
                     </div>
                     <div class="col">
                         <div class="form-group">
@@ -428,6 +437,23 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <!--Criar o CKEditor 5-->
 <script src="../ckeditor5/build/ckeditor.js"></script>
 <script>
+    function filtrarInvestigadores() {
+        var input, filter, ul, investigadores, i, txtValue;
+        input = document.getElementById('filtro');
+        filter = input.value.toUpperCase();
+        ul = document.getElementById("listaInvestigadores");
+        investigadores = ul.getElementsByClassName('investigador');
+
+        for (i = 0; i < investigadores.length; i++) {
+            label = investigadores[i].getElementsByTagName('label')[0];
+            txtValue = label.textContent || label.innerText;
+            if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                investigadores[i].style.display = "";
+            } else {
+                investigadores[i].style.display = "none";
+            }
+        }
+    }
     $(document).ready(function() {
         $('.ck_replace').each(function() {
             ClassicEditor.create(this, {
