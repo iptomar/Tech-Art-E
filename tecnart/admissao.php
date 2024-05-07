@@ -252,8 +252,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 </style>
 <div class="container mt-3">
     <div class="align-option w-100 mb-3">
-        <a class="text-decoration-none pr-2" style="font-weight:<?= $_SESSION["lang"] == "pt" ? "bold" : "normal\"" . "; href='session_var_pt.php'; onclick='confirmChange()';" ?>">PT</a>
-        <a class="text-decoration-none" style="font-weight:<?= $_SESSION["lang"] == "en" ? "bold" :  "normal\"" . "; href='session_var_en.php'; onclick='confirmChange()'" ?>;">EN</a>
+        <a class="text-decoration-none pr-2" style="font-weight: <?= $_SESSION["lang"] == "pt" ? "bold" : "normal" ?>; cursor: pointer;" onclick="confirmChange('pt')">PT</a>
+        <a class="text-decoration-none" style="font-weight: <?= $_SESSION["lang"] == "en" ? "bold" : "normal" ?>; cursor: pointer;" onclick="confirmChange('en')">EN</a>
     </div>
     <div class="card">
         <div class="card-header">
@@ -347,10 +347,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 </div>
 
 <script>
-    function confirmChange() {
+    function confirmChange(lang) {
         const confirmed = confirm('Warning: Changing the language will reset all your input. Any unsaved progress will be lost. Are you sure you want to proceed?');
-        if (!confirmed) {
-            event.preventDefault(); // prevent the form from submitting if the user doesn't confirm
+        if (confirmed) {
+            
+            fetch(`session_language.php`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+                },
+                body: `newLanguage=${lang}`,
+            }).then(async function(response) {
+                return response.text().then(async function(text) {
+                    location.replace(location.href);
+                });
+            });
+
         }
     }
 
