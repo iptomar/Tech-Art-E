@@ -38,7 +38,7 @@ if (isset($_POST["anoRelatorio"])) {
 /**
  * Define idioma e outras configurações
  */
-$language = isset($_SESSION["lang"]) && $_SESSION["lang"] == "en" ? "_en" : "";
+$language = ($_SESSION["lang"] == "en") ? "_en" : "";
 $pdo = pdo_connect_mysql();
 $records_per_page = 12;
 
@@ -102,14 +102,13 @@ if (@$_SESSION["anoRelatorio"] != "") {
 	$anoAtual = date("Y");
 }
 ?>
-<!--
 <div class="container mt-3">
 	<form id="formAnoRelatorio">
 
 		<input required name="anoRelatorio" type="number" class="form-control mr-2" placeholder="Ano do relatório" min="1950" max="2999" step="1" pattern="\d{4}" data-error="Por favor insira um ano válido" style="max-width: 200px; min-width: 160px; display: inline-block;" value="<?= $anoAtual ?>" />
 		<input type="submit" value="Selecionar Ano" class="btn btn-success" />
 
-		<?php/*
+		<?php
 		if (isset($_SESSION["anoRelatorio"])) {
 			$class = "text-danger";
 			$symbol = "&#xE002;";
@@ -123,19 +122,18 @@ if (@$_SESSION["anoRelatorio"] != "") {
 			$class = "text-info";
 			$symbol = "&#xE88E;";
 			$msg = "Ano Atual: " . date("Y");
-		}*/
+		}
 		?>
 
-		<span id="anoSpan" class=" $class" style="height:20px; display: inline-block; vertical-align: middle;">
-			<span id="anoSymbol" class="material-icons ml-3" style="font-size: 18px; vertical-align: middle;">< //$symbol </span>
-			<span class="ml-2" id="anoSubmit" id="anoSubmit" style="font-size:15px;"> //$msg </span>
+		<span id="anoSpan" class="<?= $class ?>" style="height:20px; display: inline-block; vertical-align: middle;">
+			<span id="anoSymbol" class="material-icons ml-3" style="font-size: 18px; vertical-align: middle;"><?= $symbol ?></span>
+			<span class="ml-2" id="anoSubmit" id="anoSubmit" style="font-size:15px;"><?= $msg ?></span>
 		</span>
 
 	</form>
 
 </div>
 
-	-->
 
 <div class="container-xl">
 	<div class="table-responsive">
