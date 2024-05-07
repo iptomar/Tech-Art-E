@@ -104,6 +104,25 @@ if (@$_SESSION["anoRelatorio"] != "") {
 ?>
 
 
+<div class="container mt-3">
+	<form id="formAnoRelatorio">
+		<select required name="anoRelatorio" class="form-control mr-2" style="max-width: 200px; min-width: 160px; display: inline-block;">
+			<?php
+			// Defina o ano atual
+			$anoAtual = date("Y");
+			
+			// Loop para gerar opções de anos, começando de 1950 até 2999
+			for ($ano = 1900; $ano <= $anoAtual; $ano++) {
+				// Verifique se este é o ano atual e selecione-o por padrão
+				$selected = ($ano == $anoAtual) ? 'selected' : '';
+				echo "<option value=\"$ano\" $selected>$ano</option>";
+			}
+			?>
+		</select>
+	</form>
+</div>
+
+
 <div class="container-xl">
 	<div class="table-responsive">
 		<div class="table-wrapper">
