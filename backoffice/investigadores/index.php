@@ -71,12 +71,29 @@ $query = "SELECT id, email, nome,
         FROM investigadores ORDER BY nome
         LIMIT $start_from, $records_per_page";
 $result = mysqli_query($conn, $query);
+
+$researchers_data = [];
+
+if (mysqli_num_rows($result) > 0) {
+    // Loop through each row and add it to the $researchers array
+    while ($row = mysqli_fetch_assoc($result)) {
+        $researchers_data[] = $row;
+    }
+}
+
+// Encode the researchers data to JSON format
+$researchers_json = json_encode($researchers_data);
+
+// Output the JSON data directly into a JavaScript variable
+echo "<script>var researchersData = " . $researchers_json . ";</script>";
+
 ?>
 
 
+<!-- Importa folhas de estilo e scripts necessários -->
 <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-</link>
 
+<!-- Importa fontes -->
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto|Varela+Round">
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
 <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
@@ -87,15 +104,16 @@ $result = mysqli_query($conn, $query);
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
 <script src="../assets/js/citation-js-0.6.8.js"></script>
 
-
-
+<!-- Estilos personalizados -->
 <style type="text/css">
 	<?php
 	$css = file_get_contents('../styleBackoffices.css');
 	echo $css;
 	?>
 </style>
+
 <?php
+// Define o ano atual para o campo de seleção de ano do relatório
 if (@$_SESSION["anoRelatorio"] != "") {
 	$anoAtual = $_SESSION["anoRelatorio"];
 } else {
@@ -103,7 +121,7 @@ if (@$_SESSION["anoRelatorio"] != "") {
 }
 ?>
 
-
+<!-- Tabela para listar os investigadores -->
 <div class="container-xl">
 	<div class="table-responsive">
 		<div class="table-wrapper">
@@ -118,6 +136,11 @@ if (@$_SESSION["anoRelatorio"] != "") {
 						</div>
 					<?php } ?>
 				</div>
+				<div class="row mt-3">
+					<div class="col">
+						<input type="text" id="searchInput" class="form-control" placeholder="Pesquisar...">
+					</div>
+    			</div>
 			</div>
 			<table class="table table-striped table-hover">
 				<thead>
@@ -134,182 +157,220 @@ if (@$_SESSION["anoRelatorio"] != "") {
 						<th>Ações</th>
 					</tr>
 				</thead>
-				<tbody>
-					<?php
-					if (mysqli_num_rows($result) > 0) {
-						while ($row = mysqli_fetch_assoc($result)) {
-							if ($_SESSION["autenticado"] == 'administrador' || $_SESSION["autenticado"] == $row["id"]) {
-								echo "<tr>";
-								echo "<td>" . $row["tipo"] . "</td>";
-								echo "<td>" . $row["nome"] . "</td>";
-								echo "<td>" . $row["email"] . "</td>";
-								echo "<td>" . $row["ciencia_id"] . "</td>";
-								/*                         echo "<td>".$row["sobre"]."</td>";
-								echo "<td>".$row["tipo"]."</td>";
-								echo "<td>".$row["areasdeinteresse"]."</td>";
-								echo "<td>".$row["orcid"]."</td>";
-								echo "<td>".$row["scholar"]."</td>";
-								*/
-								echo "<td><img src='../assets/investigadores/$row[fotografia]' width = '100px' height = '100px'></td>";
-								echo "<td style='min-width:250px;'><a href='edit.php?id=" . $row["id"] . "' class='w-100 mb-1 btn btn-primary'><span>Alterar</span></a>";
-								if ($_SESSION["autenticado"] == 'administrador') {
-									echo "<a href='remove.php?id=" . $row["id"] . "' class='w-100 mb-1 btn btn-danger'><span>Apagar</span></a><br>";
-								}
-								if ($row["tipo"] != "Externo") {
-									echo "<a href='resetpassword.php?id=" . $row["id"] . "' class='w-100 mb-1 btn btn-warning'><span>Alterar Password</span></a><br>";
-									echo "<a data-id='" . $row["id"] . "' class='gerarRelatorio w-100 mb-1 btn btn-info'><span>Gerar Relatório</span></a><br>";
-									echo "<a href='publicacoes.php?id=" . $row["id"] . "' class='w-100 mb-1 btn btn-secondary'><span>Selecionar Publicações</span></a><br>";
-								}
-								echo "</td>";
-								echo "</tr>";
-							}
-						}
-					}
-					?>
+				<tbody id="researchersTableBody">
+					
 				</tbody>
 			</table>
 		</div>
 	</div>
 </div>
 
-<!-- Pagination section -->
+<!-- Seção de paginação -->
 <div class="pagination_container">
     <ul class="pagination justify-content-center">
-        <!-- Previous page link -->
+        <!-- Link da página anterior -->
         <li class="page-item <?= $page <= 1 ? 'disabled' : '' ?>">
             <a class="page-link" href="?page=<?= $page - 1 ?>" tabindex="-1"><?= change_lan("previous") ?></a>
         </li>
-        <!-- Page links -->
+        <!-- Links das páginas -->
         <?php for ($i = 1; $i <= $total_pages; $i++) : ?>
             <li class="page-item <?= $page == $i ? 'active' : '' ?>">
                 <a class="page-link" href="?page=<?= $i ?>"><?= $i ?></a>
             </li>
         <?php endfor; ?>
-        <!-- Next page link -->
+        <!-- Link da próxima página -->
         <li class="page-item <?= $page >= $total_pages ? 'disabled' : '' ?>">
             <a class="page-link" href="?page=<?= $page + 1 ?>"><?= change_lan("next") ?></a>
         </li>
     </ul>
 </div>
+
             <!-- End pagination section -->
 
 <script>
-	const Cite = require('citation-js');
-	// Quando o documento estiver totalmente carregado
-	$(document).ready(function() {
-		// Quando um elemento com o id 'formAnoRelatorio' for submetido
-		$("#formAnoRelatorio").submit(function(event) {
-			// Prevenir a submissão 
-			event.preventDefault();
-			//Verificar se o formulário é valido
-			if (this.checkValidity() === true) {
-				//Obter o ano colocado no input
-				var anoRelatorio = $("input[name='anoRelatorio']").val();
-				//Actualizar a variavel de sessão usando AJAX
-				$.ajax({
-					type: "POST",
-					url: "ajax.php",
-					data: {
-						anoRelatorio: anoRelatorio
-					},
-					success: function(response) {
-						$("input[name='anoRelatorio']").val(response.ano);
+	/**
+ * Importa a biblioteca Citation.js.
+ */
+const Cite = require('citation-js');
 
-						var anoSpan = document.getElementById("anoSpan");
-						if (anoSpan.className = "text-info") {
-							// Update the class and content
-							anoSpan.className = "text-danger"; // Change the class
-							$("#anoSymbol").html("&#xE002;");
+/**
+ * Função executada quando o documento estiver totalmente carregado.
+ */
+$(document).ready(function() {
+    /**
+     * Função executada quando o formulário com o id 'formAnoRelatorio' é submetido.
+     * @param {Event} event - O evento de submissão do formulário.
+     */
+    $("#formAnoRelatorio").submit(function(event) {
+        // Prevenir a submissão do formulário
+        event.preventDefault();
+        // Verificar se o formulário é válido
+        if (this.checkValidity() === true) {
+            // Obter o ano inserido no input
+            var anoRelatorio = $("input[name='anoRelatorio']").val();
+            // Atualizar a variável de sessão utilizando AJAX
+            $.ajax({
+                type: "POST",
+                url: "ajax.php",
+                data: {
+                    anoRelatorio: anoRelatorio
+                },
+                success: function(response) {
+                    // Atualizar o valor do input com o ano retornado pela resposta AJAX
+                    $("input[name='anoRelatorio']").val(response.ano);
 
-						}
+                    var anoSpan = document.getElementById("anoSpan");
+                    if (anoSpan.className = "text-info") {
+                        // Atualizar a classe e o conteúdo
+                        anoSpan.className = "text-danger"; // Mudar a classe
+                        $("#anoSymbol").html("&#xE002;");
 
-						$("#anoSubmit").html(response.msg);
+                    }
 
-					},
-					error: function(xhr, status, error) {
-						console.error(xhr, status, error);
-					}
-				});
-			}
-		});
+                    $("#anoSubmit").html(response.msg);
 
-		// Quando um elemento com a classe 'gerarRelatorio' for clicado
-		$('.gerarRelatorio').on('click', function(e) {
+                },
+                error: function(xhr, status, error) {
+                    console.error(xhr, status, error);
+                }
+            });
+        }
+    });
 
-			e.preventDefault(); // Impede o comportamento padrão do link
+    /**
+     * Função executada quando um elemento com a classe 'gerarRelatorio' é clicado.
+     * @param {Event} e - O evento de clique no elemento.
+     */
+    $('.gerarRelatorio').on('click', function(e) {
+        e.preventDefault(); // Impede o comportamento padrão do link
 
-			// Obter o ID do investigador a partir do atributo de dados
-			var investigatorId = $(this).data('id');
+        // Obter o ID do investigador a partir do atributo de dados
+        var investigatorId = $(this).data('id');
 
-			// Fazer um pedido AJAX para iniciar a geração do relatório
-			$.ajax({
-				type: 'POST',
-				url: 'ajax.php',
-				data: {
-					idGerar: investigatorId
-				},
-				success: function(response) {
+        // Fazer uma requisição AJAX para iniciar a geração do relatório
+        $.ajax({
+            type: 'POST',
+            url: 'ajax.php',
+            data: {
+                idGerar: investigatorId
+            },
+            success: function(response) {
+                var reportData = response;
+                // Acessar os dados 'publicacoes' e 'patents' de reportData
+                var publications = reportData.publicacoes;
+                var patents = reportData.patents;
 
-					var reportData = response;
-					// Aceder aos dados 'publicacoes' e 'patents' de reportData
-					var publications = reportData.publicacoes;
-					var patents = reportData.patents;
+                // Obter a referência APA das publicações
+                for (var i = 0; i < publications.length; i++) {
+                    var APAreference = processarAPA(publications[i].dados);
+                    publications[i].dados = APAreference;
+                }
 
-					// Obter a referência APA das publicações
-					for (var i = 0; i < publications.length; i++) {
-						var APAreference = processarAPA(publications[i].dados);
-						publications[i].dados = APAreference;
-					}
+                // Obter a referência APA das patentes
+                for (var i = 0; i < patents.length; i++) {
+                    var APAreference = processarAPA(patents[i].dados);
+                    patents[i].dados = APAreference;
+                }
 
-					// Obter a referência APA das patentes
-					for (var i = 0; i < patents.length; i++) {
-						var APAreference = processarAPA(patents[i].dados);
-						patents[i].dados = APAreference;
-					}
+                /**
+                 * Função para processar a referência APA.
+                 * @param {Object} data - Os dados a serem processados.
+                 * @returns {string} - O conteúdo HTML da referência APA.
+                 */
+                function processarAPA(data) {
+                    // Lógica de processamento do "citation.js"
+                    var htmlContent = new Cite(data).format('bibliography', {
+                        format: 'html',
+                        template: 'apa',
+                        lang: 'en-US'
+                    });
+                    return htmlContent;
+                }
 
-					function processarAPA(data) {
-						// Lógica de processamento do "citation.js"
-						var htmlContent = new Cite(data).format('bibliography', {
-							format: 'html',
-							template: 'apa',
-							lang: 'en-US'
-						});
-						return htmlContent;
-					}
+                // Criar um elemento de formulário
+                var form = document.createElement('form');
+                form.method = 'POST';
+                form.action = 'autoEscreveRelatorio.php?id=' + investigatorId;
 
-					// Criar um elemento de formulário
-					var form = document.createElement('form');
-					form.method = 'POST';
-					form.action = 'autoEscreveRelatorio.php?id=' + investigatorId;
+                // Criar um elemento de input para armazenar as publicações
+                var input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = 'publicacoes';
+                input.value = JSON.stringify(publications);
 
-					// Criar um elemento de input para armazenar as publicações
-					var input = document.createElement('input');
-					input.type = 'hidden';
-					input.name = 'publicacoes';
-					input.value = JSON.stringify(publications);
+                // Anexar o input 'publicacoes' ao formulário
+                form.appendChild(input);
 
-					// Anexar o input 'publicacoes' ao formulário
-					form.appendChild(input);
+                // Criar um elemento de input para armazenar as patentes
+                var inputPat = document.createElement('input');
+                inputPat.type = 'hidden';
+                inputPat.name = 'patentes';
+                inputPat.value = JSON.stringify(patents);
 
-					var inputPat = document.createElement('input');
-					inputPat.type = 'hidden';
-					inputPat.name = 'patentes';
-					inputPat.value = JSON.stringify(patents);
+                // Anexar o input 'patentes' ao formulário
+                form.appendChild(inputPat);
 
-					// Anexar o input 'patentes' ao formulário
-					form.appendChild(inputPat);
+                // Anexar o formulário ao corpo do documento
+                document.body.appendChild(form);
 
-					// Anexar o formulário ao corpo do documento
-					document.body.appendChild(form);
+                // Submeter o formulário
+                form.submit();
+            },
+            error: function(xhr, status, error) {
+                console.error(xhr.responseText);
+            }
+        });
+    });
+});
 
-					// Submeter o formulário
-					form.submit();
-				},
-				error: function(xhr, status, error) {
-					console.error(xhr.responseText);
-				}
-			});
-		});
-	});
+
+	//--------------------------------------------------------------------------------------------------------
+
+/**
+ * Função para gerar o HTML de um pesquisador.
+ * @param {Object} researcher - Os dados do pesquisador.
+ * @returns {string} - O HTML do pesquisador.
+ */
+function generateResearcherHTML(researcher) {
+    var html = "<tr>" +
+        "<td>" + researcher.tipo + "</td>" +
+        "<td>" + researcher.nome + "</td>" +
+        "<td>" + researcher.email + "</td>" +
+        "<td>" + researcher.ciencia_id + "</td>" +
+        "<td><img src='../assets/investigadores/" + researcher.fotografia + "' width='100px' height='100px'></td>" +
+        "<td style='min-width:250px;'><a href='edit.php?id=" + researcher.id + "' class='w-100 mb-1 btn btn-primary'><span>Alterar</span></a>";
+
+    // Se o usuário for um administrador, adicionar botão de exclusão
+    if ("<?php echo $_SESSION["autenticado"]; ?>" == 'administrador') {
+        html += "<a href='remove.php?id=" + researcher.id + "' class='w-100 mb-1 btn btn-danger'><span>Apagar</span></a><br>";
+    }
+
+    // Se o tipo de pesquisador não for 'Externo', adicionar botões adicionais
+    if (researcher.tipo != "Externo") {
+        html += "<a href='resetpassword.php?id=" + researcher.id + "' class='w-100 mb-1 btn btn-warning'><span>Alterar Password</span></a><br>" +
+            "<a data-id='" + researcher.id + "' class='gerarRelatorio w-100 mb-1 btn btn-info'><span>Gerar Relatório</span></a><br>" +
+            "<a href='publicacoes.php?id=" + researcher.id + "' class='w-100 mb-1 btn btn-secondary'><span>Selecionar Publicações</span></a><br>";
+    }
+
+    html += "</td></tr>";
+    return html;
+}
+
+/**
+ * Função para gerar dinamicamente o HTML de todos os pesquisadores.
+ * @returns {string} - O HTML de todos os pesquisadores.
+ */
+function generateResearchersHTML() {
+    var html = "";
+    for (var i = 0; i < researchersData.length; i++) {
+        html += generateResearcherHTML(researchersData[i]);
+    }
+    return html;
+}
+
+// Obter o elemento tbody da tabela
+var tbody = document.getElementById("researchersTableBody");
+
+// Gerar e inserir HTML de todos os pesquisadores no tbody da tabela
+tbody.innerHTML = generateResearchersHTML();
 </script>
-
