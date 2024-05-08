@@ -121,38 +121,24 @@ if (@$_SESSION["anoRelatorio"] != "") {
 }
 ?>
 
-<!-- Formulário para selecionar o ano do relatório -->
 <div class="container mt-3">
 	<form id="formAnoRelatorio">
-		<input required name="anoRelatorio" type="number" class="form-control mr-2" placeholder="Ano do relatório" min="1950" max="2999" step="1" pattern="\d{4}" data-error="Por favor insira um ano válido" style="max-width: 200px; min-width: 160px; display: inline-block;" value="<?= $anoAtual ?>" />
-		<input type="submit" value="Selecionar Ano" class="btn btn-success" />
-
-		<?php
-		// Exibe mensagem sobre o ano selecionado ou atual
-		if (isset($_SESSION["anoRelatorio"])) {
-			$class = "text-danger";
-			$symbol = "&#xE002;";
-			if (@$_SESSION["anoRelatorio"] != "") {
-				$msg = "Foi selecionado o ano " . $_SESSION["anoRelatorio"];
-			} else {
-				$_SESSION["anoRelatorio"] = date("Y");
-				$msg = "Campo submetido vazio! (Ano: " . $_SESSION["anoRelatorio"] . ")";
+		<select required name="anoRelatorio" class="form-control mr-2" style="max-width: 200px; min-width: 160px; display: inline-block;">
+			<?php
+			// Defina o ano atual
+			$anoAtual = date("Y");
+			
+			// Loop para gerar opções de anos, começando de 1950 até 2999
+			for ($ano = 1900; $ano <= $anoAtual; $ano++) {
+				// Verifique se este é o ano atual e selecione-o por padrão
+				$selected = ($ano == $anoAtual) ? 'selected' : '';
+				echo "<option value=\"$ano\" $selected>$ano</option>";
 			}
-		} else {
-			$class = "text-info";
-			$symbol = "&#xE88E;";
-			$msg = "Ano Atual: " . date("Y");
-		}
-		?>
-
-		<span id="anoSpan" class="<?= $class ?>" style="height:20px; display: inline-block; vertical-align: middle;">
-			<span id="anoSymbol" class="material-icons ml-3" style="font-size: 18px; vertical-align: middle;"><?= $symbol ?></span>
-			<span class="ml-2" id="anoSubmit" id="anoSubmit" style="font-size:15px;"><?= $msg ?></span>
-		</span>
+			?>
+		</select>
 	</form>
 </div>
 
-<!-- Tabela para listar os investigadores -->
 <div class="container-xl">
 	<div class="table-responsive">
 		<div class="table-wrapper">

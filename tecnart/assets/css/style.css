@@ -1234,23 +1234,15 @@ form input[type="submit"]:focus {
 .owl-carousel .owl-nav {
 	position: absolute;
 	top: 50%;
-	width: 100%;
+	width: 102%;
 }
 
 .owl-carousel .owl-nav .owl-prev,
 .owl-carousel .owl-nav .owl-next {
 	position: absolute;
-	-webkit-transform: translateY(-50%);
-	-ms-transform: translateY(-50%);
-	transform: translateY(-50%);
-	margin-top: -10px;
+	width: 30px;
+	margin-top: -30px !important;
 	color: #3e64ff !important;
-	-moz-transition: all 0.7s ease;
-	-o-transition: all 0.7s ease;
-	-webkit-transition: all 0.7s ease;
-	-ms-transition: all 0.7s ease;
-	transition: all 0.7s ease;
-	opacity: 0;
 }
 
 .owl-carousel .owl-nav .owl-prev span:before,
@@ -1259,11 +1251,18 @@ form input[type="submit"]:focus {
 }
 
 .owl-carousel .owl-nav .owl-prev {
-	left: 0;
+	left: -25px;
 }
 
 .owl-carousel .owl-nav .owl-next {
-	right: 0;
+	right: -5px;
+}
+
+.owl-carousel .owl-nav .owl-prev .ti-arrow-left,
+.owl-carousel .owl-nav .owl-next .ti-arrow-right {
+	font-size: x-large;
+	line-height: 1.2;
+	color: #3e64ff !important;
 }
 
 .owl-carousel .owl-dots {
@@ -1288,19 +1287,6 @@ form input[type="submit"]:focus {
 
 .owl-carousel .owl-dots .owl-dot.active {
 	background: #b3b3b3;
-}
-
-.owl-carousel:hover .owl-nav .owl-prev,
-.owl-carousel:hover .owl-nav .owl-next {
-	opacity: 1;
-}
-
-.owl-carousel:hover .owl-nav .owl-prev {
-	left: -25px;
-}
-
-.owl-carousel:hover .owl-nav .owl-next {
-	right: -25px;
 }
 
 .owl-carousel.home-slider {
