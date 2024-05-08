@@ -58,7 +58,7 @@
     </div>
 </footer>
 <!-- footer end -->
-<div class="cpy_ pt-2 pb-2" style="background: linear-gradient(90deg, rgba(255,0,0,1) 0%, rgba(255,154,0,1) 10%, rgba(208,222,33,1) 20%, rgba(79,220,74,1) 30%, rgba(63,218,216,1) 40%, rgba(47,201,226,1) 50%, rgba(28,127,238,1) 60%, rgba(95,21,242,1) 70%, rgba(186,12,248,1) 80%, rgba(251,7,217,1) 90%, rgba(255,0,0,1) 100%);">
+<div class="cpy_ pt-2 pb-2" style="background: #002169;">
     <p class="mx-auto" style="font-size: 13px;">
         <?= change_lang("finance-txt") ?> FCT - Fundação para a Ciência e a Tecnologia, I.P., 
         <?= change_lang("strat-txt") ?> Projeto UD/05488/2020
