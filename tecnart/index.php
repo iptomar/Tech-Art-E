@@ -75,6 +75,10 @@ $language = ($_SESSION["lang"] == "en") ? "_en" : "";
 </section>
 <!-- end slider section -->
 
+<script src="assets/js/jquery.waypoints.min.js"></script>
+<script src="assets/js/jquery.stellar.min.js"></script>
+<script src="assets/js/main.js"></script>
+
 <!-- why section -->
 <section class="why_section layout_padding">
    <div class="container">
@@ -240,6 +244,8 @@ $language = ($_SESSION["lang"] == "en") ? "_en" : "";
       </div>
    </div>
 </section>
+
+<script src="assets/js/main2.js"></script>
 
 <!-- end client section -->
 
