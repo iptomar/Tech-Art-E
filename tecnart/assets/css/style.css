@@ -952,20 +952,16 @@ a:focus {
 	height: 100%;
 }
 
-.footer_section .footer-info {
-	text-align: center;
-	margin-top: 25px;
-}
-
-.footer_section .footer-info p {
+.footer-info {
 	color: #ffffff;
-	margin: 0;
-	padding: 20px 0;
-	border-top: 1px solid rgba(255, 255, 255, 0.2);
 }
 
-.footer_section .footer-info p a {
-	color: inherit;
+.footer-info p {
+	color: #ffffff;
+}
+
+.footer-info a {
+	color: #ffffff;
 }
 
 /*# sourceMappingURL=style.css.map */
@@ -1081,8 +1077,7 @@ footer {
 }
 
 .logo-tech_footer {
-	max-width: 320px;
-	width: 100%;
+	max-width: 200px;
 }
 
 .information_f p {
