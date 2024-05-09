@@ -81,7 +81,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         print_r($sql);
 
         if (mysqli_query($conn, $sql)) {
-            //header('Location: index.php');
+            header('Location: index.php');
         } else {
             echo "Error: " . $sql . "<br>" . mysqli_error($conn);
         }
@@ -407,9 +407,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             }
                             ?>
 
-                            <input type="text" id="filtro" placeholder="Filtrar por nome">
-                            <button type="button" id="filtrarInvestigadoresBtn"
-                                onclick="filtrarInvestigadores()">Pesquisar</button>
+                            <input type="text" id="filtro" placeholder="Filtrar por nome" oninput="filtrarInvestigadores()">
+                            <button type="button" id="filtrarInvestigadoresBtn" onclick="filtrarInvestigadores()">Pesquisar</button>
+
                             <button type="button" id="btnReset" onclick="resetFiltragem()">Limpar</button>
 
                             <div id="listaInvestigadores">
