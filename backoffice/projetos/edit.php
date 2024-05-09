@@ -407,9 +407,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             }
                             ?>
 
-                            <input type="text" id="filtro" placeholder="Filtrar por nome" class="form-control" oninput="filtrarInvestigadores()" >
-                            
+
                             <div id="listaInvestigadores">
+                            <input type="text" id="filtro" placeholder="Pesquisar..." class="form-control" oninput="filtrarInvestigadores()" >
+
                                 <?php
                                 $sql = "SELECT id, nome, tipo FROM investigadores ORDER BY CASE WHEN tipo = 'Externo' THEN 1 ELSE 0 END, tipo, nome";
                                 $result = mysqli_query($conn, $sql);
@@ -441,21 +442,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         </div>
                     </div>
 
+               
+                        <div class="col">
+                        <div class="form-group">
+                            <label>Fotografia</label>
+                            <input
+                            <input accept="image/*" type="file" onchange="previewImg(this);" class="form-control"
+                                id="inputFotografia" name="fotografia" value=<?php echo $fotografia; ?>>
+                            <!-- Error -->
+                            <div class="help-block with-errors"></div>
+                                <img id="preview" src="<?php echo $mainDir . $fotografia; ?>" class="mt-3" width='100px'
+                                    height='100px' />
+                            </div>
+                        </div>
+                            </div>
+                    
 
 
-
-                    <div class="form-group">
-                        <label>Fotografia</label>
-                        <input accept="image/*" type="file" onchange="previewImg(this);" class="form-control"
-                            id="inputFotografia" name="fotografia" value=<?php echo $fotografia; ?>>
-                        <!-- Error -->
-                        <div class="help-block with-errors"></div>
-                        <img id="preview" src="<?php echo $mainDir . $fotografia; ?>" class="mt-3" width='100px'
-                            height='100px' />
-                    </div>
-
-                                
-
+                <div class="row">
+                    <div class="col">
                     <div class="form-group">
                         <button type="submit" class="btn btn-primary btn-block">Gravar</button>
                     </div>
@@ -464,6 +469,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         <button type="button" onclick="window.location.href = 'index.php'"
                             class="btn btn-danger btn-block">Cancelar</button>
                     </div>
+                    </div>               
+                </div>          
+
+                                
+
+                    
             </form>
         </div>
     </div>
@@ -482,15 +493,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             }
         });
     });
-
-    function resetFiltragem() {
-        document.getElementById('filtro').value = ''; // Limpa o campo de texto
-
-        var investigadores = document.getElementById("listaInvestigadores").getElementsByClassName('investigador');
-        for (var i = 0; i < investigadores.length; i++) {
-            investigadores[i].style.display = ""; // Restaura a visibilidade de todos os investigadores
-        }
-    }
 
 
     function filtrarInvestigadores() {
