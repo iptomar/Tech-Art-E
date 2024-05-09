@@ -60,7 +60,7 @@ require "../verifica.php";
         }
 
         .checkbox,
-        .checkboxReceivers {
+        .checkboxReceivers, .checkboxNews{
             margin-left: auto;
             /* Centraliza a checkbox à direita */
             margin-right: 10px;
@@ -139,6 +139,32 @@ require "../verifica.php";
                         ?>
                     </div>
                     <hr>
+                    <h5 class="modal-title">Noticias</h5>
+                    <div class="project-list">
+                        <?php
+                        $sql = "SELECT nome, fotografia, email FROM investigadores ORDER BY nome";
+                        $sql = "SELECT titulo, conteudo, imagem FROM noticias ORDER BY DATA DESC, titulo";
+                        $result = $conn->query($sql);
+
+                        if ($result->num_rows > 0) {
+                            while ($row = $result->fetch_assoc()) {
+                                echo '<div class="project">';
+                                echo '<img src="../assets/noticias/' . $row["imagem"] . '" class="project-image" alt="' . $row["imagem"] . '">';
+                                echo '<div class="project-info">';
+                                echo '<h3>' . $row["titulo"] . '</h3>';
+                                echo '<p class="conteudo">' . $row["conteudo"] . '</p>';
+                                echo '<input type="checkbox" class="checkboxNews">';
+                                echo '</div>';
+                                echo '</div>';
+                            }
+                        } else {
+                            echo "0 resultados";
+                        }
+
+                        ?>
+                    </div>
+
+                    <hr>
                     <h5 class="modal-title">Destinatários</h5>
                     <div class="project-list">
                         <?php
@@ -203,10 +229,13 @@ require "../verifica.php";
         function concluir() {
             var checkboxes = document.querySelectorAll('.checkbox');
             var checkboxesReceivers = document.querySelectorAll('.checkboxReceivers');
+            var checkboxesNews = document.querySelectorAll('.checkboxNews');
             var checkedProjects = [];
             var checkedReceivers = [];
+            var checkedNews = [];
             var verificarCheckbox = false;
             var verificarCheckboxR = false;
+            var verificarCheckboxN = false;
             var sendToAll = false;
             // Obter os projetos selecionados
             checkboxes.forEach(function (checkbox) {
@@ -218,6 +247,18 @@ require "../verifica.php";
                         imgid: checkbox.parentElement.parentElement.querySelector('img').id
                     };
                     checkedProjects.push(projeto);
+                }
+            });
+
+            checkboxesNews.forEach(function (checkbox) {
+                if (checkbox.checked) {
+                    verificarCheckboxN = true;
+                    var new123 = {
+                        titulo: checkbox.parentElement.querySelector('h3').textContent,
+                        descricao: checkbox.parentElement.querySelector('p').textContent,
+                        imgid: checkbox.parentElement.parentElement.querySelector('img').id
+                    };
+                    checkedNews.push(new123);
                 }
             });
 
@@ -243,13 +284,14 @@ require "../verifica.php";
             } else {
                 console.log(checkedProjects);
                 console.log(checkedReceivers);
+                console.log(checkedNews);
                 // Enviar os dados para o PHP via AJAX
                 fetch('newsletterSender.php', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json; charset=utf-8',
                     },
-                    body: JSON.stringify({ checkedProjects: checkedProjects, checkedReceivers: checkedReceivers, sendToAll: sendToAll }),
+                    body: JSON.stringify({ checkedProjects: checkedProjects, checkedReceivers: checkedReceivers, sendToAll: sendToAll, checkedNews: checkedNews }),
                 })
                     .then(response => {
                         if (response.ok) {

@@ -18,9 +18,11 @@ require '../../libraries/lib-smtp/SMTP.php';
 $checkedItems = json_decode(file_get_contents('php://input'), true);
 $checkedProjectsJSON = $checkedItems['checkedProjects'];
 $checkedReceiversJSON = $checkedItems['checkedReceivers'];
+$checkedNewsJSON = $checkedItems['checkedNews'];
 $checkedSend2AllJSON = $checkedItems['sendToAll'];
 echo json_encode($checkedProjectsJSON);
 echo json_encode($checkedReceiversJSON);
+echo json_encode($checkedNewsJSON);
 echo json_encode($checkedSend2AllJSON);
 
 // Verificar se os dados foram recebidos com sucesso
@@ -112,6 +114,24 @@ if ($checkedItems === null) {
 
     $content .= '<div style="margin-bottom: 20px; display: flex; align-items: center;">';
     $content .= "<img src='http://novotechneart.ipt.pt/backoffice/assets/projetos/" . $img . "' class='project-image' alt='ImagemProjeto' width='350' height='250'>";
+    $content .= '<div style="margin-left: 20px;">';
+    $content .= "<p><b>" . $titulo . "</b></p>";
+    $content .= "<p>" . $desc . "</p>";
+    $content .= "</div>";
+    $content .= "</div>";
+
+
+  }
+
+  foreach ($checkedNewsJSON as $new) {
+    $titulo = $new['titulo'];
+    $desc = $new['descricao'];
+    $img = $new['imgid'];
+
+    //echo "Título: $titulo, Descrição: $desc, Imagem: $img<br>";
+
+    $content .= '<div style="margin-bottom: 20px; display: flex; align-items: center;">';
+    $content .= "<img src='http://novotechneart.ipt.pt/backoffice/assets/noticias/" . $img . "' class='project-image' alt='ImagemNoticia' width='350' height='250'>";
     $content .= '<div style="margin-left: 20px;">';
     $content .= "<p><b>" . $titulo . "</b></p>";
     $content .= "<p>" . $desc . "</p>";
