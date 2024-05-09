@@ -43,10 +43,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // Check if the 'fotografia' file exists and update the SQL query and parameters accordingly
     if ($fotografia_exists) {
-        $fotografia = uniqid() . '_' . $_FILES["fotografia"]["name"];;
+        $fotografia = uniqid() . '_' . $_FILES["fotografia"]["name"];
+        ;
         $sql .= ", fotografia = ? ";
         $params[] = $fotografia;
-        move_uploaded_file($_FILES["fotografia"]["tmp_name"], $mainDir  . $fotografia);
+        move_uploaded_file($_FILES["fotografia"]["tmp_name"], $mainDir . $fotografia);
     }
 
     $sql .= ", concluido = ? WHERE id = ?";
@@ -58,7 +59,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 
     if (mysqli_stmt_execute($stmt)) {
-        if (count($investigadores) == 0 && count($managers) == 0 ) {
+        if (count($investigadores) == 0 && count($managers) == 0) {
             header('Location: index.php');
             return;
         }
@@ -80,7 +81,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         print_r($sql);
 
         if (mysqli_query($conn, $sql)) {
-            //header('Location: index.php');
+            header('Location: index.php');
         } else {
             echo "Error: " . $sql . "<br>" . mysqli_error($conn);
         }
@@ -133,7 +134,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     function previewImg(input) {
         if (input.files && input.files[0]) {
             var reader = new FileReader();
-            reader.onload = function(e) {
+            reader.onload = function (e) {
                 $('#preview').attr('src', e.target.result);
             }
             reader.readAsDataURL(input.files[0]);
@@ -177,12 +178,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <div class="card">
         <h5 class="card-header text-center">Editar Projeto</h5>
         <div class="card-body">
-            <form role="form" data-toggle="validator" action="edit.php?id=<?php echo $id; ?>" method="post" enctype="multipart/form-data">
+            <form id="editprojform" role="form" data-toggle="validator" action="edit.php?id=<?php echo $id; ?>"
+                method="post" enctype="multipart/form-data">
 
                 <input type="hidden" name="id" value=<?php echo $id; ?>>
                 <div class="form-group">
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="1" id="concluido" name="concluido" <?= $concluido ?>>
+                        <input class="form-check-input" type="checkbox" value="1" id="concluido" name="concluido"
+                            <?= $concluido ?>>
                         <label class="form-check-label" for="concluido">
                             Concluído
                         </label>
@@ -193,7 +196,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <div class="col">
                         <div class="form-group">
                             <label>Nome</label>
-                            <input type="text" minlength="1" required maxlength="100" required data-error="Por favor introduza um nome válido" name="nome" class="form-control" id="inputName" value="<?php echo $nome; ?>">
+                            <input type="text" minlength="1" required maxlength="100" required
+                                data-error="Por favor introduza um nome válido" name="nome" class="form-control"
+                                id="inputName" value="<?php echo $nome; ?>">
                             <!-- Error -->
                             <div class="help-block with-errors"></div>
                         </div>
@@ -201,7 +206,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <div class="col">
                         <div class="form-group">
                             <label>Nome (Inglês)</label>
-                            <input type="text" maxlength="100" name="nome_en" class="form-control" id="inputNameEn" value="<?php echo $nome_en; ?>">
+                            <input type="text" maxlength="100" name="nome_en" class="form-control" id="inputNameEn"
+                                value="<?php echo $nome_en; ?>">
                             <!-- Error -->
                             <div class="help-block with-errors"></div>
                         </div>
@@ -212,7 +218,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <div class="col">
                         <div class="form-group">
                             <label>Descrição</label>
-                            <textarea class="form-control" minlength="1" required maxlength="200" data-error="Por favor introduza uma descrição" id="inputDescricao" name="descricao"><?php echo $descricao; ?></textarea>
+                            <textarea class="form-control" minlength="1" required maxlength="200"
+                                data-error="Por favor introduza uma descrição" id="inputDescricao"
+                                name="descricao"><?php echo $descricao; ?></textarea>
                             <!-- Error -->
                             <div class="help-block with-errors"></div>
                         </div>
@@ -220,7 +228,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <div class="col">
                         <div class="form-group">
                             <label>Descrição (Inglês)</label>
-                            <textarea class="form-control" maxlength="200" id="inputDescricaoEn" name="descricao_en"><?php echo $descricao_en; ?></textarea>
+                            <textarea class="form-control" maxlength="200" id="inputDescricaoEn"
+                                name="descricao_en"><?php echo $descricao_en; ?></textarea>
                             <!-- Error -->
                             <div class="help-block with-errors"></div>
                         </div>
@@ -231,7 +240,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <div class="col halfCol">
                         <div class="form-group">
                             <label>Sobre Projeto</label>
-                            <textarea class="form-control ck_replace" minlength="1" required data-error="Por favor introduza um 'sobre projeto'" cols="30" rows="5" id="inputSobreProjeto" name="sobreprojeto"><?php echo $sobreprojeto; ?></textarea>
+                            <textarea class="form-control ck_replace" minlength="1" required
+                                data-error="Por favor introduza um 'sobre projeto'" cols="30" rows="5"
+                                id="inputSobreProjeto" name="sobreprojeto"><?php echo $sobreprojeto; ?></textarea>
                             <!-- Error -->
                             <div class="help-block with-errors"></div>
                         </div>
@@ -240,7 +251,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <div class="col halfCol">
                         <div class="form-group">
                             <label>Sobre Projeto (Inglês)</label>
-                            <textarea class="form-control ck_replace" cols="30" rows="5" id="inputSobreProjetoEn" name="sobreprojeto_en"><?php echo $sobreprojeto_en; ?></textarea>
+                            <textarea class="form-control ck_replace" cols="30" rows="5" id="inputSobreProjetoEn"
+                                name="sobreprojeto_en"><?php echo $sobreprojeto_en; ?></textarea>
                             <!-- Error -->
                             <div class="help-block with-errors"></div>
                         </div>
@@ -252,7 +264,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <div class="col">
                         <div class="form-group">
                             <label>Referência</label>
-                            <input type="text" minlength="1" required maxlength="100" data-error="Por favor introduza uma referência válida" class="form-control" id="inputReferencia" name="referencia" value="<?php echo $referencia; ?>">
+                            <input type="text" minlength="1" required maxlength="100"
+                                data-error="Por favor introduza uma referência válida" class="form-control"
+                                id="inputReferencia" name="referencia" value="<?php echo $referencia; ?>">
                             <!-- Error -->
                             <div class="help-block with-errors"></div>
                         </div>
@@ -260,7 +274,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <div class="col">
                         <div class="form-group">
                             <label>Referência (Inglês)</label>
-                            <input type="text" maxlength="100" class="form-control" id="inputReferenciaEn" name="referencia_en" value="<?php echo $referencia_en; ?>">
+                            <input type="text" maxlength="100" class="form-control" id="inputReferenciaEn"
+                                name="referencia_en" value="<?php echo $referencia_en; ?>">
                             <!-- Error -->
                             <div class="help-block with-errors"></div>
                         </div>
@@ -271,7 +286,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <div class="col">
                         <div class="form-group">
                             <label>TECHN&ART área preferencial</label>
-                            <input type="text" minlength="1" required maxlength="255" data-error="Por favor introduza uma área preferencial" class="form-control" id="inputAreaPreferencial" name="areapreferencial" value="<?php echo $areapreferencial; ?>">
+                            <input type="text" minlength="1" required maxlength="255"
+                                data-error="Por favor introduza uma área preferencial" class="form-control"
+                                id="inputAreaPreferencial" name="areapreferencial"
+                                value="<?php echo $areapreferencial; ?>">
                             <!-- Error -->
                             <div class="help-block with-errors"></div>
                         </div>
@@ -279,7 +297,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <div class="col">
                         <div class="form-group">
                             <label>TECHN&ART área preferencial (Inglês)</label>
-                            <input type="text" maxlength="255" class="form-control" id="inputAreaPreferencialEn" name="areapreferencial_en" value="<?php echo $areapreferencial_en; ?>">
+                            <input type="text" maxlength="255" class="form-control" id="inputAreaPreferencialEn"
+                                name="areapreferencial_en" value="<?php echo $areapreferencial_en; ?>">
                             <!-- Error -->
                             <div class="help-block with-errors"></div>
                         </div>
@@ -290,7 +309,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <div class="col">
                         <div class="form-group">
                             <label>Financiamento</label>
-                            <input type="text" minlength="1" required maxlength="20" data-error="Por favor introduza um financiamento válido" class="form-control" id="inputFinanciamento" name="financiamento" value="<?php echo $financiamento; ?>">
+                            <input type="text" minlength="1" required maxlength="20"
+                                data-error="Por favor introduza um financiamento válido" class="form-control"
+                                id="inputFinanciamento" name="financiamento" value="<?php echo $financiamento; ?>">
                             <!-- Error -->
                             <div class="help-block with-errors"></div>
                         </div>
@@ -298,7 +319,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <div class="col">
                         <div class="form-group">
                             <label>Financiamento (Inglês)</label>
-                            <input type="text" maxlength="20" class="form-control" id="inputFinanciamentoEn" name="financiamento_en" value="<?php echo $financiamento_en; ?>">
+                            <input type="text" maxlength="20" class="form-control" id="inputFinanciamentoEn"
+                                name="financiamento_en" value="<?php echo $financiamento_en; ?>">
                             <!-- Error -->
                             <div class="help-block with-errors"></div>
                         </div>
@@ -308,7 +330,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <div class="col">
                         <div class="form-group">
                             <label>Âmbito</label>
-                            <input type="text" minlength="1" required maxlength="100" data-error="Por favor introduza um âmbito válido" class="form-control" id="inputAmbito" name="ambito" value="<?php echo $ambito; ?>">
+                            <input type="text" minlength="1" required maxlength="100"
+                                data-error="Por favor introduza um âmbito válido" class="form-control" id="inputAmbito"
+                                name="ambito" value="<?php echo $ambito; ?>">
                             <!-- Error -->
                             <div class="help-block with-errors"></div>
                         </div>
@@ -316,7 +340,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <div class="col">
                         <div class="form-group">
                             <label>Âmbito (Inglês)</label>
-                            <input type="text" maxlength="100" class="form-control" id="inputAmbitoEn" name="ambito_en" value="<?php echo $ambito_en; ?>">
+                            <input type="text" maxlength="100" class="form-control" id="inputAmbitoEn" name="ambito_en"
+                                value="<?php echo $ambito_en; ?>">
                             <!-- Error -->
                             <div class="help-block with-errors"></div>
                         </div>
@@ -327,7 +352,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <div class="col">
                         <div class="form-group">
                             <label>Site</label>
-                            <input type="text" minlength="1" maxlength="100" data-error="Por favor introduza um site válido" class="form-control" id="inputSite" name="site" value="<?php echo $site; ?>">
+                            <input type="text" minlength="1" maxlength="100"
+                                data-error="Por favor introduza um site válido" class="form-control" id="inputSite"
+                                name="site" value="<?php echo $site; ?>">
                             <!-- Error -->
                             <div class="help-block with-errors"></div>
                         </div>
@@ -335,7 +362,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <div class="col">
                         <div class="form-group">
                             <label>Site (Inglês)</label>
-                            <input type="text" maxlength="100" class="form-control" id="inputSiteEn" name="site_en" value="<?php echo $site_en; ?>">
+                            <input type="text" maxlength="100" class="form-control" id="inputSiteEn" name="site_en"
+                                value="<?php echo $site_en; ?>">
                             <!-- Error -->
                             <div class="help-block with-errors"></div>
                         </div>
@@ -346,7 +374,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <div class="col">
                         <div class="form-group">
                             <label>Facebook</label>
-                            <input type="text" minlength="1" maxlength="100" data-error="Por favor introduza um facebook válido" class="form-control" id="inputFace" name="facebook" value="<?php echo $facebook; ?>">
+                            <input type="text" minlength="1" maxlength="100"
+                                data-error="Por favor introduza um facebook válido" class="form-control" id="inputFace"
+                                name="facebook" value="<?php echo $facebook; ?>">
                             <!-- Error -->
                             <div class="help-block with-errors"></div>
                         </div>
@@ -354,7 +384,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <div class="col">
                         <div class="form-group">
                             <label>Facebook (Inglês)</label>
-                            <input type="text" maxlength="100" class="form-control" id="inputFaceEn" name="facebook_en" value="<?php echo $facebook_en; ?>">
+                            <input type="text" maxlength="100" class="form-control" id="inputFaceEn" name="facebook_en"
+                                value="<?php echo $facebook_en; ?>">
                             <!-- Error -->
                             <div class="help-block with-errors"></div>
                         </div>
@@ -370,56 +401,80 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             $result = mysqli_query($conn, $sql);
                             $selected = array();
                             if (mysqli_num_rows($result) > 0) {
-                                while (($row =  mysqli_fetch_assoc($result))) {
+                                while (($row = mysqli_fetch_assoc($result))) {
                                     $selected[] = $row['investigadores_id'];
                                 }
                             }
-                            $sql = "SELECT id, nome, tipo FROM investigadores 
-                                    ORDER BY CASE WHEN tipo = 'Externo' THEN 1 ELSE 0 END, tipo, nome;";
-                            $result = mysqli_query($conn, $sql);
-                            if (mysqli_num_rows($result) > 0) {
-                                while ($row = mysqli_fetch_assoc($result)) {
-                                    if ($row["id"] == $_SESSION["autenticado"]) {
-                                        echo "<input type='hidden' name='investigadores[]' value='" . $row["id"] . "'/>";
-                                    } ?>
-                                    <input type="checkbox" <?= in_array($row["id"], $selected) || $row["id"] == $_SESSION["autenticado"] ? "checked" : "" ?> <?= $row["id"] == $_SESSION["autenticado"] ? "disabled" : "" ?> name="investigadores[]" value="<?= $row["id"] ?>">
-                                    <label><?= $row["tipo"] . " - " .  $row["nome"] ?></label><br>
-                            <?php }
-                            } ?>
-                            <!-- Error -->
+                            ?>
 
+
+                            <div id="listaInvestigadores">
+                            <input type="text" id="filtro" placeholder="Pesquisar..." class="form-control" oninput="filtrarInvestigadores()" >
+
+                                <?php
+                                $sql = "SELECT id, nome, tipo FROM investigadores ORDER BY CASE WHEN tipo = 'Externo' THEN 1 ELSE 0 END, tipo, nome";
+                                $result = mysqli_query($conn, $sql);
+                                if (mysqli_num_rows($result) > 0) {
+                                    while ($row = mysqli_fetch_assoc($result)) {
+                                        if ($row["id"] == $_SESSION["autenticado"]) {
+                                            echo "<input type='hidden' name='investigadores[]' value='" . $row["id"] . "'/>";
+                                        }
+                                        ?>
+                                        <div class="investigador">
+                                            <input type="checkbox" <?= in_array($row["id"], $selected) || $row["id"] == $_SESSION["autenticado"] ? "checked" : "" ?>
+                                                <?= $row["id"] == $_SESSION["autenticado"] ? "disabled" : "" ?>
+                                                name="investigadores[]" value="<?= $row["id"] ?>">
+                                            <label><?= $row["tipo"] . " - " . $row["nome"] ?></label>
+                                        </div>
+                                        <?php
+                                    }
+                                }
+                                ?>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="form-group">
+                                <label>Gestores de projetos:</label><br>
+                                <div id="managersContainer">
+
+                                </div> <!-- Container to hold dynamically created checkboxes -->
+                            </div>
                         </div>
                     </div>
-                    <div class="col">
+
+               
+                        <div class="col">
                         <div class="form-group">
-                            <label>Gestores de projetos:</label><br>
-                            <div id="managersContainer">
-
-                            </div> <!-- Container to hold dynamically created checkboxes -->
+                            <label>Fotografia</label>
+                            <input
+                            <input accept="image/*" type="file" onchange="previewImg(this);" class="form-control"
+                                id="inputFotografia" name="fotografia" value=<?php echo $fotografia; ?>>
+                            <!-- Error -->
+                            <div class="help-block with-errors"></div>
+                                <img id="preview" src="<?php echo $mainDir . $fotografia; ?>" class="mt-3" width='100px'
+                                    height='100px' />
+                            </div>
                         </div>
+                            </div>
+                    
+
+
+                <div class="row">
+                    <div class="col">
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary btn-block">Gravar</button>
                     </div>
-                </div>
 
-                
+                    <div class="form-group">
+                        <button type="button" onclick="window.location.href = 'index.php'"
+                            class="btn btn-danger btn-block">Cancelar</button>
+                    </div>
+                    </div>               
+                </div>          
 
+                                
 
-                <div class="form-group">
-                    <label>Fotografia</label>
-                    <input accept="image/*" type="file" onchange="previewImg(this);" class="form-control" id="inputFotografia" name="fotografia" value=<?php echo $fotografia; ?>>
-                    <!-- Error -->
-                    <div class="help-block with-errors"></div>
-                    <img id="preview" src="<?php echo $mainDir  . $fotografia; ?>" class="mt-3" width='100px' height='100px' />
-                </div>
-
-
-
-                <div class="form-group">
-                    <button type="submit" class="btn btn-primary btn-block">Gravar</button>
-                </div>
-
-                <div class="form-group">
-                    <button type="button" onclick="window.location.href = 'index.php'" class="btn btn-danger btn-block">Cancelar</button>
-                </div>
+                    
             </form>
         </div>
     </div>
@@ -428,8 +483,37 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <!--Criar o CKEditor 5-->
 <script src="../ckeditor5/build/ckeditor.js"></script>
 <script>
-    $(document).ready(function() {
-        $('.ck_replace').each(function() {
+
+    document.addEventListener('DOMContentLoaded', function () {
+        var form = document.getElementById('editprojform');
+        form.addEventListener('keydown', function (event) {
+            if (event.key === 'Enter') {
+                event.preventDefault(); // Impede o comportamento padrão
+                return false;          // Não faz nada
+            }
+        });
+    });
+
+
+    function filtrarInvestigadores() {
+        var input, filter, ul, investigadores, i, txtValue;
+        input = document.getElementById('filtro');
+        filter = input.value.toUpperCase();
+        ul = document.getElementById("listaInvestigadores");
+        investigadores = ul.getElementsByClassName('investigador');
+
+        for (i = 0; i < investigadores.length; i++) {
+            label = investigadores[i].getElementsByTagName('label')[0];
+            txtValue = label.textContent || label.innerText;
+            if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                investigadores[i].style.display = "";
+            } else {
+                investigadores[i].style.display = "none";
+            }
+        }
+    }
+    $(document).ready(function () {
+        $('.ck_replace').each(function () {
             ClassicEditor.create(this, {
                 licenseKey: '',
                 simpleUpload: {
@@ -442,7 +526,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     });
 
 
-    window.addEventListener('DOMContentLoaded', function() {
+    window.addEventListener('DOMContentLoaded', function () {
         const checkboxes = document.querySelectorAll('input[type="checkbox"]');
         let lastChecked;
 
@@ -470,15 +554,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <style>
     /* Estilos para simular uma checkbox desabilitada */
     .disabled-checkbox {
-        opacity: 0.5; /* Reduz a opacidade para indicar que está desativado */
-        pointer-events: none; /* Impede eventos de clique */
-        cursor: not-allowed; /* Altera o cursor para indicar que não está disponível */
-        filter: grayscale(100%); /* Aplica escala de cinza */
+        opacity: 0.5;
+        /* Reduz a opacidade para indicar que está desativado */
+        pointer-events: none;
+        /* Impede eventos de clique */
+        cursor: not-allowed;
+        /* Altera o cursor para indicar que não está disponível */
+        filter: grayscale(100%);
+        /* Aplica escala de cinza */
     }
 </style>
 
 <script>
-    document.addEventListener("DOMContentLoaded", function() {
+    document.addEventListener("DOMContentLoaded", function () {
         var investigadorCheckboxes = document.querySelectorAll('input[name="investigadores[]"]');
         var managersContainer = document.getElementById('managersContainer');
         var noManagersMessage = document.createElement('p');
@@ -488,11 +576,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // Função para desativar um checkbox
         function desativarCheckbox(checkbox) {
             checkbox.classList.add('disabled-checkbox'); // Adiciona a classe para simular a checkbox desativada
-        
+
         }
 
         // Add selected investigadores to managers side
-        investigadorCheckboxes.forEach(function(checkbox) {
+        investigadorCheckboxes.forEach(function (checkbox) {
             if (checkbox.checked) {
                 // Create a corresponding checkbox for manager
                 var managerCheckbox = document.createElement('input');
@@ -519,14 +607,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // Disable checkbox for logged-in user if present among managers
         var loggedInUserId = "<?php echo $_SESSION["autenticado"]; ?>";
         var managerCheckboxes = document.querySelectorAll('input[name="managers[]"]');
-        managerCheckboxes.forEach(function(managerCheckbox) {
+        managerCheckboxes.forEach(function (managerCheckbox) {
             if (managerCheckbox.value === loggedInUserId) {
                 desativarCheckbox(managerCheckbox); // Chama a função para desativar o checkbox
             }
         });
 
-        investigadorCheckboxes.forEach(function(checkbox) {
-            checkbox.addEventListener('change', function() {
+        investigadorCheckboxes.forEach(function (checkbox) {
+            checkbox.addEventListener('change', function () {
                 if (checkbox.checked) {
                     // Create a corresponding checkbox for manager
                     var managerCheckbox = document.createElement('input');
@@ -545,9 +633,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 } else {
                     // Remove the corresponding manager checkbox and label when unchecked
                     var managerCheckboxes = document.querySelectorAll('input[name="managers[]"]');
-                    managerCheckboxes.forEach(function(managerCheckbox) {
+                    managerCheckboxes.forEach(function (managerCheckbox) {
                         if (managerCheckbox.value === checkbox.value) {
-                          
+
                             var br = managerCheckbox.nextSibling.nextSibling;
                             if (br && br.tagName === "BR") {
                                 br.parentNode.removeChild(br);
@@ -558,8 +646,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                 label.parentNode.removeChild(label);
                             }
 
-                              // Remove checkbox
-                              managerCheckbox.parentNode.removeChild(managerCheckbox);
+                            // Remove checkbox
+                            managerCheckbox.parentNode.removeChild(managerCheckbox);
                             // Remove line break if it exists and is a sibling
                         }
                     });
@@ -577,12 +665,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
             });
         });
-    // Validate if investigadores who are managers should be checked
-    <?php
+        // Validate if investigadores who are managers should be checked
+        <?php
         $sql = "SELECT investigadores_id, isManager FROM investigadores_projetos WHERE projetos_id = " . $id;
         $result = mysqli_query($conn, $sql);
         if (mysqli_num_rows($result) > 0) {
-            while (($row =  mysqli_fetch_assoc($result))) {
+            while (($row = mysqli_fetch_assoc($result))) {
                 if ($row['isManager'] == 1) {
                     echo "var managerCheckbox = document.querySelector('input[name=\"managers[]\"][value=\"" . $row['investigadores_id'] . "\"]');
                           if (managerCheckbox) {
@@ -591,8 +679,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 }
             }
         }
-    ?>
-});
+        ?>
+    });
 </script>
 
 
