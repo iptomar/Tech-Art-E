@@ -407,11 +407,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             }
                             ?>
 
-                            <input type="text" id="filtro" placeholder="Filtrar por nome" oninput="filtrarInvestigadores()">
-                            <button type="button" id="filtrarInvestigadoresBtn" onclick="filtrarInvestigadores()">Pesquisar</button>
-
-                            <button type="button" id="btnReset" onclick="resetFiltragem()">Limpar</button>
-
+                            <input type="text" id="filtro" placeholder="Filtrar por nome" class="form-control" oninput="filtrarInvestigadores()" >
+                            
                             <div id="listaInvestigadores">
                                 <?php
                                 $sql = "SELECT id, nome, tipo FROM investigadores ORDER BY CASE WHEN tipo = 'Externo' THEN 1 ELSE 0 END, tipo, nome";
