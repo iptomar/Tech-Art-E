@@ -390,4 +390,43 @@ var tbody = document.getElementById("researchersTableBody");
 
 // Gerar e inserir HTML de todos os pesquisadores no tbody da tabela
 tbody.innerHTML = generateResearchersHTML();
+
+
+//SEARCH BAR-------------------------------------------------------------------------
+
+/**
+ * Função para filtrar os pesquisadores com base na entrada de pesquisa.
+ * Atualiza dinamicamente a tabela com os resultados filtrados.
+ */
+function filterResearchers() {
+    // Obtém o valor do input de pesquisa
+    var searchInputValue = document.getElementById("searchInput").value.toLowerCase();
+    
+    // Filtra os pesquisadores com base no valor de entrada
+    var filteredResearchers = researchersData.filter(function(researcher) {
+        return researcher.nome.toLowerCase().includes(searchInputValue) ||
+               researcher.email.toLowerCase().includes(searchInputValue) ||
+               researcher.ciencia_id.toLowerCase().includes(searchInputValue) ||
+               researcher.tipo.toLowerCase().includes(searchInputValue);
+    });
+    
+    // Atualiza o HTML da tabela com os pesquisadores filtrados
+    tbody.innerHTML = generateFilteredResearchersHTML(filteredResearchers);
+}
+
+/**
+ * Função para gerar o HTML dos pesquisadores filtrados.
+ * @param {Array} filteredResearchers - Array contendo os pesquisadores filtrados.
+ * @returns {string} - O HTML dos pesquisadores filtrados.
+ */
+function generateFilteredResearchersHTML(filteredResearchers) {
+    var html = "";
+    for (var i = 0; i < filteredResearchers.length; i++) {
+        html += generateResearcherHTML(filteredResearchers[i]);
+    }
+    return html;
+}
+
+// Adiciona um listener de evento ao input de pesquisa para acionar a filtragem dos pesquisadores
+document.getElementById("searchInput").addEventListener("input", filterResearchers);
 </script>

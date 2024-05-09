@@ -110,7 +110,7 @@ $language = ($_SESSION["lang"] == "en") ? "_en" : "";
                &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp
             </h3>
 
-            <a style="display: inline-block; padding: 5px 25px; background-color:#333F50; border: 2px solid #000000; color: #ffffff; border-radius: 0; 
+            <a style="display: inline-block; padding: 5px 25px; background-color:#002169; color: #ffffff; 
                      -webkit-transition: all 0.3s; transition: all 0.3s;  font-family: 'Quicksand', sans-serif;  font-size: 20px;" href="projetos_em_curso.php">
                <?= change_lang("see-all-btn-rd-projects"); ?>
             </a>
@@ -235,7 +235,7 @@ $language = ($_SESSION["lang"] == "en") ? "_en" : "";
          </div>
 
          <div class="text-center">
-            <a style="display: inline-block; padding: 5px 25px; background-color:#333F50; border: 2px solid #000000; color: #ffffff; border-radius: 0; 
+            <a style="display: inline-block; padding: 5px 25px; background-color:#002169; color: #ffffff; 
                      -webkit-transition: all 0.3s; transition: all 0.3s;  font-family: 'Quicksand', sans-serif;  font-size: 20px;" href="noticias.php">
                <?= change_lang("see-all-btn-latest-news") ?>
             </a>
