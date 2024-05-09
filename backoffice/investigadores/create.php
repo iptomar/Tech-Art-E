@@ -38,6 +38,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
         $password = password_hash($_POST["password"], PASSWORD_DEFAULT);
         if (mysqli_stmt_execute($stmt)) {
+            // Verificar se o email do investigador não está presente na tabela newsletter
+            $check_email_stmt = mysqli_prepare($conn, "SELECT COUNT(*) AS count FROM newsletter WHERE email = ?");
+            mysqli_stmt_bind_param($check_email_stmt, 's', $email);
+            mysqli_stmt_execute($check_email_stmt);
+            mysqli_stmt_bind_result($check_email_stmt, $email_count);
+            mysqli_stmt_fetch($check_email_stmt);
+            mysqli_stmt_close($check_email_stmt);
+
+            // Se o email não estiver presente na tabela newsletter, inseri-lo
+            if ($email_count == 0) {
+                $newsletter_insert_stmt = mysqli_prepare($conn, "INSERT INTO newsletter (email) VALUES (?)");
+                mysqli_stmt_bind_param($newsletter_insert_stmt, 's', $email);
+                mysqli_stmt_execute($newsletter_insert_stmt);
+                mysqli_stmt_close($newsletter_insert_stmt);
+            }
             header('Location: index.php');
             exit;
         } else {
