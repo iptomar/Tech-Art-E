@@ -1124,6 +1124,13 @@ CREATE TABLE `newsletter` (
   UNIQUE KEY `newsletter_unique` (`email`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
+---
+--- Adiciona os emails dos investigadores à tabela newsletter
+---
+INSERT IGNORE INTO newsletter (email)
+SELECT email FROM investigadores WHERE email <> '';
+
+
 
 --
 -- Indexes for dumped tables

@@ -16,13 +16,24 @@ try {
             // Sanitize o e-mail
             $email = filter_var($_POST['email'], FILTER_SANITIZE_EMAIL);
             
-            // Preparar e executar a consulta SQL para inserir o e-mail no banco de dados
-            $stmt = $conn->prepare("INSERT INTO newsletter (email) VALUES (?)");
-            $stmt->execute([$email]);
+            // Verifique se o email já existe na tabela
+            $stmt_check = $conn->prepare("SELECT COUNT(*) AS count FROM newsletter WHERE email = ?");
+            $stmt_check->execute([$email]);
+            $result_check = $stmt_check->fetch(PDO::FETCH_ASSOC);
+            
+            if ($result_check['count'] > 0) {
+                // Definir a mensagem de erro na resposta se o email já existir na tabela
+                $response['status'] = 'error';
+                $response['message'] = 'Este e-mail já está inscrito na newsletter.';
+            } else {
+                // Preparar e executar a consulta SQL para inserir o e-mail no banco de dados
+                $stmt = $conn->prepare("INSERT INTO newsletter (email) VALUES (?)");
+                $stmt->execute([$email]);
 
-            // Definir a mensagem de sucesso na resposta
-            $response['status'] = 'success';
-            $response['message'] = 'Obrigado por se inscrever na nossa newsletter!';
+                // Definir a mensagem de sucesso na resposta
+                $response['status'] = 'success';
+                $response['message'] = 'Obrigado por se inscrever na nossa newsletter!';
+            }
         } else {
             // Definir a mensagem de erro na resposta
             $response['status'] = 'error';
