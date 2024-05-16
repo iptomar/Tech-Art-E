@@ -13,7 +13,7 @@ $autenticado = $_SESSION["autenticado"];
 if($autenticado != "administrador"){
 	$innerjoinSQL = "inner join investigadores_projetos inpj on pj.id = inpj.projetos_id where inpj.investigadores_id = '$autenticado'";
 }
-$sql = "SELECT id, nome, referencia, areapreferencial, financiamento,fotografia, concluido FROM projetos pj $innerjoinSQL ORDER BY nome";
+$sql = "SELECT id, nome, referencia, areapreferencial, financiamento, fotografia, concluido FROM projetos pj $innerjoinSQL ORDER BY nome";
 $result = mysqli_query($conn, $sql);
 
 ?>
@@ -86,7 +86,7 @@ $result = mysqli_query($conn, $sql);
                 }
                 if ($_SESSION["autenticado"] == "administrador" || $isManager == 1) {
 					echo "<a href='edit.php?id=" . $row["id"] . "' class='btn btn-primary' style='min-width: 85px;'><span>Alterar</span></a>";
-					echo "<br><br>";
+					echo "<br><br>"
                     echo "<a href='remove.php?id=" . $row["id"] . "' class='btn btn-danger' style='min-width: 85px'><span>Apagar</span></a>";
                 }
                 echo "</td>";
