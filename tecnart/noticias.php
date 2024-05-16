@@ -61,14 +61,15 @@ $noticias = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         <h6 class="imgText m-auto" style="font-size: 11px; font-weight: 100; top:95%"><?= date("d.m.Y", strtotime($noticia['data'])) ?></h6>
                      </div>
                   </a>
+                  
                </div>
 
             <?php endforeach; ?>
-
+                                
          </div>
-
+         <p> Envie as suas notícias para: <a href="mailto:comunicartechneart@ipt.pt">comunicartechneart@ipt.pt</a> </p>                  
       </div>
-
+                           
    </div>
 </section>
 
