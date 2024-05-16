@@ -48,61 +48,54 @@ $result = mysqli_query($conn, $sql);
 					</div>
 				</div>
 				<table class="table table-striped table-hover">
-					<thead>
-						<tr>
-							<th>Nome</th>
-							<th>Estado</th>
-							<!--                 <th>Descrição</th>
-				<th>Sobre Projeto</th> -->
-							<th>Referência</th>
-							<th>TECHN&ART Área Preferencial</th>
-							<th>Financiamento</th>
-							<!--                 <th>Âmbito</th>
- -->
-							<th>Fotografia</th>
-							<th>Ações</th>
-						</tr>
-					</thead>
-					<tbody>
-						<?php
-						if (mysqli_num_rows($result) > 0) {
-							while ($row = mysqli_fetch_assoc($result)) {
-								echo "<tr>";
-								echo "<td>" . $row["nome"] . "</td>";
-								if($row["concluido"]){
-									echo "<td>Concluído</td>";
-								}else{
-									echo "<td>Em Curso</td>";
-								}
-								/*             echo "<td style='width:250px;'>".$row["descricao"]."</td>";
-							echo "<td style='width:250px;'>".$row["sobreprojeto"]."</td>";
-							*/
-								echo "<td>" . $row["referencia"] . "</td>";
-								echo "<td>" . $row["areapreferencial"] . "</td>";
-								echo "<td>" . $row["financiamento"] . "</td>";
-								/*             echo "<td>".$row["ambito"]."</td>";
-							 */
-								echo "<td><img src='../assets/projetos/$row[fotografia]' width = '100px' height = '100px'></td>";
-								$sql1 = "SELECT investigadores_id, isManager FROM investigadores_projetos WHERE projetos_id = " . $row["id"];
-								$result1 = mysqli_query($conn, $sql1);
-								//$selected = array();
-								$isManager = 0;
-								if (mysqli_num_rows($result1) > 0) {
-									while (($row1 = mysqli_fetch_assoc($result1))) {
-										//$selected[] = $row1['investigadores_id'];
-										$isManager = $row1['isManager'];
-									}
-								}
-								if ($_SESSION["autenticado"] == "administrador" || $isManager == 1  /*|| in_array($_SESSION["autenticado"], $selected)*/) {
-									echo "<td><a href='edit.php?id=" . $row["id"] . "' class='btn btn-primary'><span>Alterar</span></a></td>";
-									echo "<td><a href='remove.php?id=" . $row["id"] . "' class='btn btn-danger'><span>Apagar</span></a></td>";
-								}
-								echo "</tr>";
-							}
-						}
-						?>
-					</tbody>
-				</table>
+    <thead>
+        <tr>
+            <th>Nome</th>
+            <th>Estado</th>
+            <th>Referência</th>
+            <th>TECHN&ART Área Preferencial</th>
+            <th>Financiamento</th>
+            <th>Fotografia</th>
+            <th>Ações</th> <!-- Movido para o final -->
+        </tr>
+    </thead>
+    <tbody>
+        <?php
+        if (mysqli_num_rows($result) > 0) {
+            while ($row = mysqli_fetch_assoc($result)) {
+                echo "<tr>";
+                echo "<td>" . $row["nome"] . "</td>";
+                if($row["concluido"]){
+                    echo "<td>Concluído</td>";
+                }else{
+                    echo "<td>Em Curso</td>";
+                }
+                echo "<td>" . $row["referencia"] . "</td>";
+                echo "<td>" . $row["areapreferencial"] . "</td>";
+                echo "<td>" . $row["financiamento"] . "</td>";
+                echo "<td><img src='../assets/projetos/$row[fotografia]' width='100px' height='100px'></td>";
+                // Ações movidas para o final
+                echo "<td>";
+                $sql1 = "SELECT investigadores_id, isManager FROM investigadores_projetos WHERE projetos_id = " . $row["id"];
+                $result1 = mysqli_query($conn, $sql1);
+                $isManager = 0;
+                if (mysqli_num_rows($result1) > 0) {
+                    while (($row1 = mysqli_fetch_assoc($result1))) {
+                        $isManager = $row1['isManager'];
+                    }
+                }
+                if ($_SESSION["autenticado"] == "administrador" || $isManager == 1) {
+					echo "<a href='edit.php?id=" . $row["id"] . "' class='btn btn-primary' style='min-width: 85px;'><span>Alterar</span></a>";
+					echo "<br><br>";
+                    echo "<a href='remove.php?id=" . $row["id"] . "' class='btn btn-danger' style='min-width: 85px'><span>Apagar</span></a>";
+                }
+                echo "</td>";
+                echo "</tr>";
+            }
+        }
+        ?>
+    </tbody>
+</table>
 			</div>
 		</div>
 	</div>
