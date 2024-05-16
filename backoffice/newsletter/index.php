@@ -1,4 +1,3 @@
-
 <?php
 require "../verifica.php";
 ?>
@@ -16,27 +15,21 @@ require "../verifica.php";
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
         crossorigin="anonymous"></script>
     <style>
-        .modal-dialog {
-            max-width: 70%;
-            /* Defina a largura máxima do modal */
-            margin: auto;
-            /* Centralize o modal horizontalmente */
-            margin-top: calc(30vh - 210px);
-            /* Calcula a margem superior para centralizar verticalmente */
+        hr {
+            margin-top: 30px;
+            margin-bottom: 30px;
+            border: 0;
+            border-top: 1px solid #dee2e6;
         }
-
         .project-list {
             max-height: 300px;
-            /* Altura máxima da lista para permitir a rolagem */
             overflow-y: auto;
-            /* Adicionando scroll apenas na direção vertical */
         }
 
         .project {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            /* Alinha os itens ao longo do eixo principal */
             margin-bottom: 20px;
         }
 
@@ -50,177 +43,144 @@ require "../verifica.php";
         .project-info {
             flex: 1;
             max-width: calc(100% - 130px);
-            /* Largura máxima menos a largura da imagem e da checkbox */
         }
 
         .description {
             overflow: hidden;
             text-overflow: ellipsis;
-            /* Adiciona reticências se o texto for muito longo */
         }
 
         .checkbox,
-        .checkboxReceivers, .checkboxNews{
+        .checkboxReceivers,
+        .checkboxNews {
             margin-left: auto;
-            /* Centraliza a checkbox à direita */
             margin-right: 10px;
-        }
-
-        .box {
-            height: 100%;
-            margin: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
         }
 
         .btn-center {
             text-align: center;
+            margin: 20px 0;
         }
-        
     </style>
 </head>
 
 <body>
-    <div class="box">
-        <button type="button" class="btn btn-primary btn-lg btn-center" data-toggle="modal" data-target="#projectPopUpList">
-            Construir e Enviar Newsletter
-        </button>
-    </div>
-    
+    <div class="container">
+        <br>
+        <div class="input-group mb-3">
+            <input type="text" class="form-control" placeholder="Pesquisar por nome ou descrição" id="searchInput">
+        </div>
 
-    <!-- Modal com lista de projetos-->
-    <div class="modal" id="projectPopUpList" tabindex="-1" role="dialog">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Projetos</h5>
-                    <div class="input-group" style="margin-left: auto; max-width: 300px;">
-                        <input type="text" class="form-control" placeholder="Pesquisar por nome ou descrição"
-                            id="searchInput">
-                    </div>
+        <h3>Projetos</h3>
+        <div class="project-list" id="projectList">
+            <!-- Script que carrega a lista de projetos -->
+            <?php
+            require '../config/basedados.php';
 
-                </div>
-                <div class="modal-body">
-                    <div class="project-list">
+            $conn = mysqli_connect($servername, $username, $password, $dbname);
 
-                        <!-- Script que carrega a lista de projetos -->
-                        <?php
-                        // Incluir arquivo de ligação com a base de dados
-                        require '../config/basedados.php';
+            if (!$conn) {
+                die("Connection failed: " . mysqli_connect_error());
+            }
+            mysqli_set_charset($conn, $charset);
 
-                        // Create connection
-                        $conn = mysqli_connect($servername, $username, $password, $dbname);
+            $sql = "SELECT nome, fotografia, descricao FROM projetos ORDER BY nome";
+            $result = $conn->query($sql);
 
-                        // Check connection
-                        if (!$conn) {
-                            die("Connection failed: " . mysqli_connect_error());
-                        }
-                        mysqli_set_charset($conn, $charset);
-                        // Consulta SQL para obter os projetos
-                        $sql = "SELECT nome, fotografia, descricao FROM projetos ORDER BY nome";
-                        $result = $conn->query($sql);
-                        // Verifica se há resultados e exibe os projetos
-                        if ($result->num_rows > 0) {
-                            while ($row = $result->fetch_assoc()) {
-                                echo '<div class="project">';
-                                echo '<img src="../assets/projetos/' . $row["fotografia"] . '" class="project-image" alt="' . $row["nome"] . '" id="' . $row["fotografia"] . '">';
-                                echo '<div class="project-info">';
-                                echo '<h3>' . $row["nome"] . '</h3>';
-                                echo '<p>' . $row["descricao"] . '</p>';
-                                echo '<input type="checkbox" class="checkbox">';
-                                echo '</div>';
-                                echo '</div>';
-                            }
-                        } else {
-                            echo "0 resultados";
-                        }
+            if ($result->num_rows > 0) {
+                while ($row = $result->fetch_assoc()) {
+                    echo '<div class="project">';
+                    echo '<img src="../assets/projetos/' . $row["fotografia"] . '" class="project-image" alt="' . $row["nome"] . '" id="' . $row["fotografia"] . '">';
+                    echo '<div class="project-info">';
+                    echo '<h5>' . $row["nome"] . '</h3>';
+                    echo '<p>' . $row["descricao"] . '</p>';
+                    echo '<input type="checkbox" class="checkbox">';
+                    echo '</div>';
+                    echo '</div>';
+                }
+            } else {
+                echo "0 resultados";
+            }
 
-                        ?>
-                    </div>
-                    <hr>
-                    <h5 class="modal-title">Noticias</h5>
-                    <div class="project-list">
-                        <?php
-                        $sql = "SELECT nome, fotografia, email FROM investigadores ORDER BY nome";
-                        $sql = "SELECT titulo, conteudo, imagem FROM noticias ORDER BY DATA DESC, titulo";
-                        $result = $conn->query($sql);
+            ?>
+        </div>
 
-                        if ($result->num_rows > 0) {
-                            while ($row = $result->fetch_assoc()) {
-                                echo '<div class="project">';
-                                echo '<img src="../assets/noticias/' . $row["imagem"] . '" class="project-image" alt="' . $row["imagem"] . '">';
-                                echo '<div class="project-info">';
-                                echo '<h3>' . $row["titulo"] . '</h3>';
-                                echo '<p class="conteudo">' . $row["conteudo"] . '</p>';
-                                echo '<input type="checkbox" class="checkboxNews">';
-                                echo '</div>';
-                                echo '</div>';
-                            }
-                        } else {
-                            echo "0 resultados";
-                        }
+        <hr>
+        <h3>Noticias</h3>
+        <div class="project-list" id="newsList">
+            <?php
+            $sql = "SELECT titulo, conteudo, imagem FROM noticias ORDER BY DATA DESC, titulo";
+            $result = $conn->query($sql);
 
-                        ?>
-                    </div>
+            if ($result->num_rows > 0) {
+                while ($row = $result->fetch_assoc()) {
+                    echo '<div class="project">';
+                    echo '<img src="../assets/noticias/' . $row["imagem"] . '" class="project-image" alt="' . $row["imagem"] . '">';
+                    echo '<div class="project-info">';
+                    echo '<h5>' . $row["titulo"] . '</h3>';
+                    echo '<p class="conteudo">' . $row["conteudo"] . '</p>';
+                    echo '<input type="checkbox" class="checkboxNews">';
+                    echo '</div>';
+                    echo '</div>';
+                }
+            } else {
+                echo "0 resultados";
+            }
 
-                    <hr>
-                    <h5 class="modal-title">Destinatários</h5>
-                    <div class="project-list">
-                        <?php
-                        $sql = "SELECT nome, fotografia, email FROM investigadores ORDER BY nome";
-                        $result = $conn->query($sql);
-                        // Verifica se há resultados e exibe os projetos
-                        echo '<div class="project">';
-                        echo '<img src="../assets/investigadores/newlletter.avif" class="project-image" alt="Newsletter">';
-                        echo '<div class="project-info">';
-                        echo '<h3>Newsletter</h3>';
-                        echo '<p>Todos os emails subscritos à newsletter</p>';
-                        echo '<input type="checkbox" class="checkboxReceivers">';
-                        echo '</div>';
-                        echo '</div>';
+            ?>
+        </div>
 
-                        echo '<div class="project">';
-                        echo '<img src="../assets/investigadores/newlletter.avif" class="project-image" alt="Newsletter">';
-                        echo '<div class="project-info">';
-                        echo '<h3>Newsletter</h3>';
-                        echo '<p>Todos os investigadores</p>';
-                        echo '<input type="checkbox" class="checkboxReceivers">';
-                        echo '</div>';
-                        echo '</div>';
+        <hr>
+        <h3>Destinatários</h3>
+        <div class="project-list" id="receiversList">
+            <?php
+            $sql = "SELECT nome, fotografia, email FROM investigadores ORDER BY nome";
+            $result = $conn->query($sql);
 
-                        if ($result->num_rows > 0) {
-                            while ($row = $result->fetch_assoc()) {
-                                echo '<div class="project">';
-                                echo '<img src="../assets/investigadores/' . $row["fotografia"] . '" class="project-image" alt="' . $row["nome"] . '">';
-                                echo '<div class="project-info">';
-                                echo '<h3>' . $row["nome"] . '</h3>';
-                                echo '<p class="email">' . $row["email"] . '</p>';
-                                echo '<input type="checkbox" class="checkboxReceivers">';
-                                echo '</div>';
-                                echo '</div>';
-                            }
-                        } else {
-                            echo "0 resultados";
-                        }
+            echo '<div class="project">';
+            echo '<img src="../assets/investigadores/newlletter.avif" class="project-image" alt="Newsletter">';
+            echo '<div class="project-info">';
+            echo '<h5>Newsletter</h3>';
+            echo '<p>Todos os emails subscritos à newsletter</p>';
+            echo '<input type="checkbox" class="checkboxReceivers">';
+            echo '</div>';
+            echo '</div>';
 
-                        // Fecha conexão
-                        $conn->close();
-                        ?>
-                    </div>
+            echo '<div class="project">';
+            echo '<img src="../assets/investigadores/newlletter.avif" class="project-image" alt="Newsletter">';
+            echo '<div class="project-info">';
+            echo '<h3>Newsletter</h3>';
+            echo '<p>Todos os investigadores</p>';
+            echo '<input type="checkbox" class="checkboxReceivers">';
+            echo '</div>';
+            echo '</div>';
 
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" onclick="concluir()">Selecionar</button>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal"
-                        onclick="limparSelecoes()">Fechar</button>
-                </div>
-            </div>
+            if ($result->num_rows > 0) {
+                while ($row = $result->fetch_assoc()) {
+                    echo '<div class="project">';
+                    echo '<img src="../assets/investigadores/' . $row["fotografia"] . '" class="project-image" alt="' . $row["nome"] . '">';
+                    echo '<div class="project-info">';
+                    echo '<h3>' . $row["nome"] . '</h3>';
+                    echo '<p class="email">' . $row["email"] . '</p>';
+                    echo '<input type="checkbox" class="checkboxReceivers">';
+                    echo '</div>';
+                    echo '</div>';
+                }
+            } else {
+                echo "0 resultados";
+            }
+
+            $conn->close();
+            ?>
+        </div>
+        <hr>
+        <div class="project-list" id="projectList">
+            <button type="button" class="btn btn-primary" onclick="concluir()">Selecionar</button>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="limparSelecoes()">Fechar</button>
         </div>
     </div>
 
     <script>
-        // Função para filtrar os projetos com base no texto da barra de pesquisa
         document.getElementById('searchInput').addEventListener('input', function () {
             var searchText = this.value.toLowerCase();
             var projects = document.querySelectorAll('.project');
@@ -247,7 +207,7 @@ require "../verifica.php";
             var verificarCheckboxN = false;
             var sendToAll = false;
             var sendToAllR = false;
-            // Obter os projetos selecionados
+
             checkboxes.forEach(function (checkbox) {
                 if (checkbox.checked) {
                     verificarCheckbox = true;
@@ -278,16 +238,16 @@ require "../verifica.php";
                     email = checkbox.parentElement.querySelector('p').textContent;
                     if (email.includes("Todos os e")) {
                         sendToAll = true;
-                    } 
+                    }
 
                     if (email.includes("Todos os i")) {
                         sendToAllR = true;
-                    } 
-                        
-                        var receiver = {
-                            email: email
-                        };
-                    
+                    }
+
+                    var receiver = {
+                        email: email
+                    };
+
                     checkedReceivers.push(receiver);
                 }
             });
@@ -299,7 +259,6 @@ require "../verifica.php";
                 console.log(checkedProjects);
                 console.log(checkedReceivers);
                 console.log(checkedNews);
-                // Enviar os dados para o PHP via AJAX
                 fetch('newsletterSender.php', {
                     method: 'POST',
                     headers: {
@@ -309,7 +268,6 @@ require "../verifica.php";
                 })
                     .then(response => {
                         if (response.ok) {
-                            //console.log('E-mail enviado com sucesso!');
                             return response.text();
                         } else {
                             console.error('Erro ao enviar e-mail:', response.statusText);
@@ -319,8 +277,6 @@ require "../verifica.php";
                         console.error('Erro ao enviar e-mail:', error);
                     });
 
-                // Fecha o modal simulando o clique no botão "Fechar"
-                document.querySelector('#projectPopUpList .modal-footer .btn-secondary').click();
                 var input = document.getElementById('searchInput');
                 input.value = '';
                 mostrarTodosProjetos();
@@ -329,7 +285,6 @@ require "../verifica.php";
         }
 
         function limparSelecoes() {
-            // Limpar seleções feitas
             var checkboxes = document.querySelectorAll('.checkbox');
             var input = document.getElementById('searchInput');
             input.value = '';
@@ -347,7 +302,6 @@ require "../verifica.php";
         }
     </script>
 
-    <!-- Adicione os scripts do Bootstrap para o modal funcionar -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
