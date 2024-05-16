@@ -43,11 +43,6 @@ header {
 	padding-bottom: 90px;
 }
 
-h1,
-h2 {
-	font-family: 'Playfair Display', serif;
-	
-}
 
 h2,
 h3 {
@@ -972,18 +967,16 @@ a:focus {
 
 /*# sourceMappingURL=style.css.map */
 
+
 .heading_container.heading_center h3 {
 	position: relative;
 	margin-bottom: 15px;
-	font-size: 32px;
-	font-family: 'Merriweather Sans Light';
 }
 
 .heading_container2.heading_center2 h3 {
 	position: relative;
 	margin-bottom: 15px;
 	font-size: 2.5rem;
-	font-family: 'Quicksand', sans-serif;
 	display: inline-block;
 }
 
@@ -2277,4 +2270,17 @@ figcaption {
   height: 300px;
   width: 300px;
   object-fit: cover; /* Resize the image to cover the entire container */
+}
+
+
+
+h1, h2, h3 {
+	font-family: 'Merriweather Sans';
+	font-weight: bold;
+	font-size: 21px;
+}
+
+p, span, a {
+	font-family: 'Merriweather Sans';
+	font-size: 14px;
 }
