@@ -22,7 +22,7 @@ $language = ($_SESSION["lang"] == "en") ? "_en" : "";
                <span class="subheading">
                   <?= change_lang("index-first-slide-desc"); ?>
                </span>
-               <div><a href="sobre.php" class="btn btn-primary px-4 py-3 mt-3 btn_no_left">
+               <div><a href="sobre.php" class="btn btn-primary px-4 py-3 mt-3 btn_no_left"  style="border-radius: 0;">
                      <?= change_lang("know-more-btn-txt-slider") ?>
                   </a></div>
             </div>
@@ -43,7 +43,7 @@ $language = ($_SESSION["lang"] == "en") ? "_en" : "";
                <span class="subheading">
                   <?= change_lang("index-second-slide-desc"); ?>
                </span>
-               <div><a href="integrados.php" class="btn btn-primary px-4 py-3 mt-3 btn_no_left">
+               <div><a href="integrados.php" class="btn btn-primary px-4 py-3 mt-3 btn_no_left"   style="border-radius: 0;">
                      <?= change_lang("know-more-btn-txt-slider") ?>
                   </a></div>
             </div>
@@ -63,7 +63,7 @@ $language = ($_SESSION["lang"] == "en") ? "_en" : "";
                <span class="subheading">
                   <?= change_lang("index-third-slide-slider-desc"); ?>
                </span>
-               <div><a href="projetos_em_curso.php" class="btn btn-primary px-4 py-3 mt-3 btn_no_left">
+               <div><a href="projetos_em_curso.php" class="btn btn-primary px-4 py-3 mt-3 btn_no_left"   style="border-radius: 0;">
                      <?= change_lang("know-more-btn-txt-slider") ?>
                   </a></div>
             </div>
