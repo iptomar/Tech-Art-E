@@ -20,6 +20,7 @@ $checkedProjectsJSON = $checkedItems['checkedProjects'];
 $checkedReceiversJSON = $checkedItems['checkedReceivers'];
 $checkedNewsJSON = $checkedItems['checkedNews'];
 $checkedSend2AllJSON = $checkedItems['sendToAll'];
+$checkedSend2AllResearchersJSON = $checkedItems['sendToAllR'];
 echo json_encode($checkedProjectsJSON);
 echo json_encode($checkedReceiversJSON);
 echo json_encode($checkedNewsJSON);
@@ -164,6 +165,33 @@ if ($checkedItems === null) {
     mysqli_set_charset($conn, $charset);
 
     $sql = "SELECT email FROM newsletter";
+    $result = $conn->query($sql);
+
+    if ($result->num_rows > 0) {
+      while ($row = $result->fetch_assoc()) {
+
+        $mail->AddAddress($row["email"]);
+      }
+    } else {
+      echo "0 resultados";
+    }
+
+  }
+
+  if ($checkedSend2AllResearchersJSON) {
+    // Incluir arquivo de ligação com a base de dados
+    require '../config/basedados.php';
+
+    // Create connection
+    $conn = mysqli_connect($servername, $username, $password, $dbname);
+
+    // Check connection
+    if (!$conn) {
+      die("Connection failed: " . mysqli_connect_error());
+    }
+    mysqli_set_charset($conn, $charset);
+
+    $sql = "SELECT email FROM investigadores";
     $result = $conn->query($sql);
 
     if ($result->num_rows > 0) {

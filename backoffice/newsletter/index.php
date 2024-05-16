@@ -180,6 +180,15 @@ require "../verifica.php";
                         echo '</div>';
                         echo '</div>';
 
+                        echo '<div class="project">';
+                        echo '<img src="../assets/investigadores/newlletter.avif" class="project-image" alt="Newsletter">';
+                        echo '<div class="project-info">';
+                        echo '<h3>Newsletter</h3>';
+                        echo '<p>Todos os investigadores</p>';
+                        echo '<input type="checkbox" class="checkboxReceivers">';
+                        echo '</div>';
+                        echo '</div>';
+
                         if ($result->num_rows > 0) {
                             while ($row = $result->fetch_assoc()) {
                                 echo '<div class="project">';
@@ -237,6 +246,7 @@ require "../verifica.php";
             var verificarCheckboxR = false;
             var verificarCheckboxN = false;
             var sendToAll = false;
+            var sendToAllR = false;
             // Obter os projetos selecionados
             checkboxes.forEach(function (checkbox) {
                 if (checkbox.checked) {
@@ -266,14 +276,18 @@ require "../verifica.php";
                 if (checkbox.checked) {
                     verificarCheckboxR = true;
                     email = checkbox.parentElement.querySelector('p').textContent;
-                    if (email.includes("Todos os")) {
+                    if (email.includes("Todos os e")) {
                         sendToAll = true;
-                    } else {
+                    } 
+
+                    if (email.includes("Todos os i")) {
+                        sendToAllR = true;
+                    } 
                         
                         var receiver = {
                             email: email
                         };
-                    }
+                    
                     checkedReceivers.push(receiver);
                 }
             });
@@ -291,7 +305,7 @@ require "../verifica.php";
                     headers: {
                         'Content-Type': 'application/json; charset=utf-8',
                     },
-                    body: JSON.stringify({ checkedProjects: checkedProjects, checkedReceivers: checkedReceivers, sendToAll: sendToAll, checkedNews: checkedNews }),
+                    body: JSON.stringify({ checkedProjects: checkedProjects, checkedReceivers: checkedReceivers, sendToAll: sendToAll, checkedNews: checkedNews, sendToAllR: sendToAllR }),
                 })
                     .then(response => {
                         if (response.ok) {
