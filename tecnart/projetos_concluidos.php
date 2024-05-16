@@ -15,6 +15,12 @@ $projetos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 <?= template_header(change_lang("projects-finished-page-heading")); ?>
 
+<div class="row mt-3">
+					<div class="col">
+						<input type="text" id="searchInput" class="form-control" placeholder="Pesquisar...">
+					</div>
+    </div>
+
 <!-- product section -->
 <section class="product_section layout_padding">
    <div style="background-color: #dbdee1; padding-top: 50px; padding-bottom: 50px;">
