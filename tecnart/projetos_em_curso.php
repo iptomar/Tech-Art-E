@@ -15,6 +15,8 @@ $projetos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 <?= template_header(change_lang("projects-ongoing-page-heading")); ?>
 
+
+
 <!-- product section -->
 <section class="product_section layout_padding">
    <div style="background-color: #dbdee1; padding-top: 50px; padding-bottom: 50px;">
@@ -35,10 +37,20 @@ $projetos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 </section>
 <!-- end product section -->
 
+
+
 <section class="product_section layout_padding">
    <div style="padding-top: 20px;">
       <div class="container">
+
+      <div class="layout_padding">
+         <div class="col">
+            <input type="text" id="searchInput" class="form-control" placeholder="Pesquisar..." >
+         </div>
+      </div>
+
          <div class="row justify-content-center mt-3">
+            
 
             <?php foreach ($projetos as $projeto) : ?>
 
