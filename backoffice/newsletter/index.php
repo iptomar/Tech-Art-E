@@ -18,9 +18,10 @@ require "../verifica.php";
         hr {
             margin-top: 30px;
             margin-bottom: 30px;
-            border: 0;
-            border-top: 1px solid #dee2e6;
+            border: 1;
+            border-top: 2px solid black;
         }
+
         .project-list {
             max-height: 300px;
             overflow-y: auto;
@@ -92,8 +93,15 @@ require "../verifica.php";
                     echo '<div class="project">';
                     echo '<img src="../assets/projetos/' . $row["fotografia"] . '" class="project-image" alt="' . $row["nome"] . '" id="' . $row["fotografia"] . '">';
                     echo '<div class="project-info">';
-                    echo '<h5>' . $row["nome"] . '</h3>';
-                    echo '<p>' . $row["descricao"] . '</p>';
+                    echo '<h5>' . $row["nome"] . '</h5>';
+
+                    $descricao = $row["descricao"];
+                    $descricaoLimit = 250; // Número máximo de caracteres
+                    if (strlen($descricao) > $descricaoLimit) {
+                        $descricao = substr($descricao, 0, $descricaoLimit) . '...';
+                    }
+
+                    echo '<p>' . $descricao . '</p>';
                     echo '<input type="checkbox" class="checkbox">';
                     echo '</div>';
                     echo '</div>';
@@ -118,7 +126,14 @@ require "../verifica.php";
                     echo '<img src="../assets/noticias/' . $row["imagem"] . '" class="project-image" alt="' . $row["imagem"] . '">';
                     echo '<div class="project-info">';
                     echo '<h5>' . $row["titulo"] . '</h3>';
-                    echo '<p class="conteudo">' . $row["conteudo"] . '</p>';
+                    $descricao = $row["conteudo"];
+                    $descricaoLimit = 250; // Número máximo de caracteres
+                    if (strlen($descricao) > $descricaoLimit) {
+                        $descricao = substr($descricao, 0, $descricaoLimit) . '...';
+                    }
+
+                    echo '<p>' . $descricao . '</p>';
+
                     echo '<input type="checkbox" class="checkboxNews">';
                     echo '</div>';
                     echo '</div>';
@@ -174,10 +189,11 @@ require "../verifica.php";
             ?>
         </div>
         <hr>
-        <div class="project-list" id="projectList">
-            <button type="button" class="btn btn-primary" onclick="concluir()">Selecionar</button>
-            <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="limparSelecoes()">Fechar</button>
+        <div class="project-list d-flex justify-content-center align-items-center" id="projectList">
+            <button type="button" class="btn btn-primary" onclick="concluir()">Enviar Newsletter</button>
         </div>
+        <br><br>
+
     </div>
 
     <script>
@@ -185,7 +201,7 @@ require "../verifica.php";
             var searchText = this.value.toLowerCase();
             var projects = document.querySelectorAll('.project');
             projects.forEach(function (project) {
-                var projectName = project.querySelector('h3').textContent.toLowerCase();
+                var projectName = project.querySelector('h5').textContent.toLowerCase();
                 var projectDescription = project.querySelector('p').textContent.toLowerCase();
                 if (projectName.includes(searchText) || projectDescription.includes(searchText)) {
                     project.style.display = 'flex';
@@ -212,7 +228,7 @@ require "../verifica.php";
                 if (checkbox.checked) {
                     verificarCheckbox = true;
                     var projeto = {
-                        titulo: checkbox.parentElement.querySelector('h3').textContent,
+                        titulo: checkbox.parentElement.querySelector('h5').textContent,
                         descricao: checkbox.parentElement.querySelector('p').textContent,
                         imgid: checkbox.parentElement.parentElement.querySelector('img').id
                     };
@@ -224,7 +240,7 @@ require "../verifica.php";
                 if (checkbox.checked) {
                     verificarCheckboxN = true;
                     var new123 = {
-                        titulo: checkbox.parentElement.querySelector('h3').textContent,
+                        titulo: checkbox.parentElement.querySelector('h5').textContent,
                         descricao: checkbox.parentElement.querySelector('p').textContent,
                         imgid: checkbox.parentElement.parentElement.querySelector('img').id
                     };
@@ -252,7 +268,7 @@ require "../verifica.php";
                 }
             });
 
-            if (!verificarCheckbox || !verificarCheckboxR) {
+            if (!verificarCheckbox && (!verificarCheckboxN || !verificarCheckboxR)) {
                 alert('Selecione pelo menos um projeto e um destinatário!');
                 return;
             } else {
@@ -268,6 +284,7 @@ require "../verifica.php";
                 })
                     .then(response => {
                         if (response.ok) {
+                            alert('Newsletter foi enviada com sucesso!');
                             return response.text();
                         } else {
                             console.error('Erro ao enviar e-mail:', response.statusText);
