@@ -1,5 +1,16 @@
 <?php
 include 'models/functions.php';
+require "./config/dbconnection.php";
+
+//Variavel que vai determinar quando é necessário escrever uma nova seccão
+$seccao = 'EMPTY';
+
+//Fazer pesquisa à base de dados para obter os dados dinamicamente.
+$pdo = pdo_connect_mysql();
+$sql = "SELECT * FROM estrutura_organica WHERE lang = 'pt' ORDER BY textOrder";
+$stmt = $pdo->query($sql);
+$result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
 ?>
 
 <!DOCTYPE html>
@@ -28,28 +39,28 @@ include 'models/functions.php';
                     <div class="flex-right">
                         <?= change_lang("org-struct-page-description") ?><br><br>
 
-                        <b><?= change_lang("org-struct-page-director-tag") ?></b><br><?= change_lang("director") ?><br><br>
+                        <!-- Vamos precorrer pelos resultados obtidos da BD -->
+                        <?php foreach ($result as $row) {
+                            
+                            //Verificamos se é uma nova seccão: escreve uma nova seccão se for uma nova. (a primeira será sempre diferente.)
+                            if($row['division'] != $seccao){
+                                //Validação feita para não existir dois espaços na primeira seccão
+                                if($seccao!='EMPTY'){ 
+                                    echo '<br><br>';
+                                }
+                                //Escreve a seccão
+                                $seccao = $row['division']; 
+                                echo '<b>'. $seccao. '</b><br>';
+                            }
+                            
+                            //Mete os diferentes nomes. 
+                            if($row['department'] == null){
+                                echo $row['name'] . '<br>';
+                            }else{
+                                echo $row['name'] . ', ' . $row['department'] . '<br>' ;
+                            }
 
-                        <b><?= change_lang("org-struct-page-deputy-director-tag") ?></b><br><?= change_lang("deputy-director") ?><br><br>
-
-                        <b><?= change_lang("org-struct-page-executive-secretary-tag") ?></b><br><?= change_lang("executive-secretary") ?><br><br>
-
-                        <b><?= change_lang("org-struct-page-board-tag") ?><br> </b><?= change_lang("board-composed") ?><br>
-                        <?= change_lang("board-member1") ?><br>
-                        <?= change_lang("board-member2") ?><br>
-                        <?= change_lang("board-member3") ?><br>
-                        <?= change_lang("board-member4") ?><br>
-                        <?= change_lang("board-member5") ?><br><br>
-
-                        <b><?= change_lang("org-struct-page-scinetific-conucil-tag") ?><br> </b><?= change_lang("all-integrated-members") ?><br><br>
-
-                        <b><?= change_lang("org-struct-page-advisory-council-tag") ?><br>
-                        </b><?= change_lang("advisory-council-one") ?><br>
-                        <?= change_lang("advisory-council-two") ?><br>
-                        <?= change_lang("advisory-council-three") ?><br>
-                        <?= change_lang("advisory-council-four") ?><br>
-                        <?= change_lang("advisory-council-five") ?><br>
-                        <?= change_lang("advisory-council-six") ?><br><br>
+                        } ?>
 
                     </div>
                 </div>
@@ -69,7 +80,20 @@ include 'models/functions.php';
                         Donec tempus odio nec nisi euismod, ac volutpat purus laoreet. Luctus eu liber a fermentum. Sed pretium turpis enim.
                     </div>
 
-                </div> -->
+                </div> 
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            -->
 
 
             </div>
