@@ -7,7 +7,7 @@ $seccao = 'EMPTY';
 
 //Fazer pesquisa à base de dados para obter os dados dinamicamente.
 $pdo = pdo_connect_mysql();
-$sql = "SELECT * FROM estrutura_organica WHERE lang = 'pt' ORDER BY textOrder";
+$sql = "SELECT * FROM estrutura_organica WHERE lang = '$_SESSION[lang]' ORDER BY textOrder";
 $stmt = $pdo->query($sql);
 $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
