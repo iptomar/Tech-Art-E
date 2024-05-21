@@ -53,11 +53,13 @@ $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                 echo '<b>'. $seccao. '</b><br>';
                             }
                             
-                            //Mete os diferentes nomes. 
-                            if($row['department'] == null){
+                            //Mostra os diferentes nomes, dependendo da informação disponível
+                            if ($row['link'] != null && $row['department'] != null) {
+                                echo '<a href="' . $row['link'] . '">' . $row['name'] . '</a>, ' . $row['department'] . '<br>';
+                            } elseif ($row['link'] == null && $row['department'] != null) {
+                                echo $row['name'] . ', ' . $row['department'] . '<br>';
+                            } else {
                                 echo $row['name'] . '<br>';
-                            }else{
-                                echo $row['name'] . ', ' . $row['department'] . '<br>' ;
                             }
 
                         } ?>
