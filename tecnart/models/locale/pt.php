@@ -64,18 +64,6 @@ return [
 
     //::::::index.php::::::
 
-    //Titulo do 1 slide
-    "index-first-slide" => "Sobre o TECHN&ART",
-    //Breve descricao do 1 slide
-    "index-first-slide-desc" => "Centro de investigação e desenvolvimento nos domínios da Salvaguarda do Património e da sua Valorização, experimental e aplicada.",
-    //Titulo do 2 slide
-    "index-second-slide" => "Tecnologia e interdisciplinaridade ao serviço do Património",
-    //Breve descricao do 2 slide
-    "index-second-slide-desc" => "O TECHN&ART une investigadores/as das mais diversas áreas disciplinares presentes no Instituto Politécnico de Tomar, das TIC às artes, das ciências sociais às ciências naturais",
-    //Titulo do 3 slide
-    "index-third-slide-slider" => "Investigação e desenvolvimento em rede",
-    //Breve descricao do 3 slide
-    "index-third-slide-slider-desc" => "O TECHN&ART acolhe e coordena projetos de I&D numa ampla rede de parceiros nacionais e internacionais, na linha da frente da salvaguarda e valorização patrimoniais",
     //botao 'Saiba mais' do slider
     "know-more-btn-txt-slider" => "SAIBA MAIS",
     //Etiqueta 'Video Institucional'
