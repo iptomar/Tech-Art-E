@@ -616,7 +616,7 @@ INSERT INTO `publicacoes` (`idPublicacao`, `dados`, `data`, `pais`, `cidade`, `t
 ('cv-prod-id-42844', '@book{cv-prod-id-42844,  title = {TesteAssociação1},   volume = {},   edition = {},   pages = {},   year = {2024},   publisher = {},   url = {},   author = {FCCN, BogusOITO and FCCN, BogusSETE},   editor = {},   keywords = {}}', '2024-01-01', NULL, NULL, 'book', 1, 1),
 ('cv-prod-id-42845', '@article{cv-prod-id-42845,  title = {Anti-HIV activity of methanolic and aqueous extracts of fifteen materials of beach-cast macroalgae: valorization of underused waste biomass},   journal = {Applied Phycology},   volume = {3},   number = {1},   pages = {236--246},   year = {2022},   url = {http://dx.doi.org/10.1080/26388081.2021.1986677},   author = {Ramos, Soraia and FCCN, BogusSETE and Moreira, JMM},   keywords = {}}', '2022-03-17', NULL, NULL, 'journal-article', 1, 1),
 ('cv-prod-id-43002', '@article{cv-prod-id-43002,  title = {Processing of pre-impregnated thermoplastic towpreg reinforced by continuous glass fibre and recycled PET by pultrusion},   journal = {},   volume = {},   number = {},   pages = {},   year = {2020},   url = {},   author = {Asensio, M. and Marques, A. and Merino, J.C. and Pastor, J.M. and Esfandiari, Puria and Silva, João and Núñez, K.},   keywords = {Pultrusion, Thermoplastic resin, Recycled, Glass fibres}}', '2020-01-01', NULL, NULL, 'journal-article', 1, 1),
-('cv-prod-id-43004', '@article{cv-prod-id-43004,  title = {Professional Private Car Service in London},   journal = {},   volume = {},   number = {},   pages = {},   year = {2023},   url = {},   author = {Noble transfer and FCCN, BogusQUATRO and FCCN, BogusCINCO and Moreira, JMM},   keywords = {#airporttransferservice #Parisairporttransfer #Parischauffeur #ChauffeurParis #Parischauffeurservice #Pariscarservice #C}}', '2023-04-03', NULL, NULL, 'journal-article', 1, 1),
+('cv-prod-id-43004', '@article{cv-prod-id-43004,  title = {Professional Private Car Service in London},   journal = {},   volume = {},   number = {},   pages = {},   year = {2023},   url = {},   author = {Noble transfer and FCCN, BogusQUATRO and FCCN, BogusCINCO and Moreira, JMM},   keywords = {#airporttransferservice #Parisairporttransfer #Parischauffeur #ChauffeurParis #Parischauffeurservice #Pariscarservice #C}}', '2023-04-03', NULL, NULL, 'journal-article', 1, 1),
 ('cv-prod-id-43008', '@article{cv-prod-id-43008,  title = {Temperature Distribution and Specific Absorption Rate inside a Child\\\'s Eyes from Mobile Phone},   journal = {Tehnicki vjesnik - Technical Gazette},   volume = {30},   number = {},   pages = {},   year = {2023},   url = {},   author = {Vladimir Stankovic and Andela Jevtic and FCCN, BogusQUATRO and FCCN, BogusCINCO and Moreira, JMM},   keywords = {General Engineering}}', '2023-04-15', NULL, NULL, 'journal-article', 1, 1),
 ('cv-prod-id-43009', '@article{cv-prod-id-43009,  title = {Does personality predict traveling abroad as indicated by mobile phone data? The idea of the mobile personality revisited},   journal = {Journal of Research in Personality},   volume = {103},   number = {},   pages = {104355},   year = {2023},   url = {},   author = {Anu Realo and Siiri Silm and Margus Tiru and Jüri Allik and FCCN, BogusQUATRO and FCCN, BogusCINCO and Moreira, JMM},   keywords = {General Psychology, Social Psychology}}', '2023-04-01', NULL, NULL, 'journal-article', 1, 1),
 ('cv-prod-id-44977', '@inbook{cv-prod-id-44977,  title = {Cells in modified iquantum groups of type AIII and related Schur algebras},   booktitle = {Journal of Algebra},   volume = {619},   edition = {},   pages = {707--743},   year = {2023},   publisher = {Elsevier BV},   url = {},   author = {Weideng Cui and FCCN, BogusCINCO and FCCN, BogusOITO},   editor = {},   keywords = {Algebra and Number Theory}}', '2023-01-01', NULL, NULL, 'book-chapter', 1, 1),
@@ -1183,6 +1183,36 @@ INSERT INTO estrutura_organica (division, name, department, link, lang, textOrde
 ('Advisory Council', 'Zoltán Somhegyi', 'Károli Gáspár University, Budapest, Hungary', NULL, 'en', 15);
 
 
+--
+-- Table structure for table `carrosel`
+--
+
+CREATE TABLE `carrosel` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `title` varchar(255) NOT NULL,
+  `caption` varchar(255) NOT NULL,
+  `link` varchar(255) DEFAULT NULL,
+  `lang` varchar(2) NOT NULL,
+  `numOrder` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=33 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+
+--
+-- Dumping data for table `publicacoes_tipos`
+--
+
+INSERT INTO imagens_carrosel (title, caption, link, lang, numOrder) VALUES
+('Sobre o TECHN&ART', 'Centro de investigação e desenvolvimento nos domínios da Salvaguarda do Património e da sua Valorização, experimental e aplicada', './assets/images/slider-index-1.jpg', 'pt', 0),
+('Tecnologia e interdisciplinaridade ao serviço do Património', 'O TECHN&ART une investigadores/as das mais diversas áreas disciplinares presentes no Instituto Politécnico de Tomar, das TIC às artes, das ciências sociais às ciências naturais', './assets/images/slider-index-2.jpg', 'pt', 1),
+('Investigação e desenvolvimento em rede', 'O TECHN&ART acolhe e coordena projetos de I&D numa ampla rede de parceiros nacionais e internacionais, na linha da frente da salvaguarda e valorização patrimoniais', './assets/images/slider-index-3.jpg', 'pt', 2);
+
+INSERT INTO imagens_carrosel (title, caption, link, lang, numOrder) VALUES
+('About TECHN&ART', 'A research and development centre focussed on the safeguard and enhancement of heritage, both experimental and applied', './assets/images/slider-index-1.jpg', 'en', 0),
+('Technology and interdisciplinarity in service of Heritage', 'TECHN&ART brings together researchers from a variety of fields in the Polytechnic University of Tomar, from ICT to the arts, from the social sciences to natural sciences', './assets/images/slider-index-2.jpg', 'en', 1),
+('Research and development in network', 'TECHN&ART hosts and leads R&D projects within a broad network of national and international partners, on the frontlines of heritage safeguard and enhancement', './assets/images/slider-index-3.jpg', 'en', 2);
+
+
+
 
 
 --
@@ -1342,4 +1372,3 @@ COMMIT;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
-
