@@ -1183,6 +1183,21 @@ INSERT INTO estrutura_organica (division, name, department, link, lang, textOrde
 ('Advisory Council', 'Zoltán Somhegyi', 'Károli Gáspár University, Budapest, Hungary', NULL, 'en', 15);
 
 
+--
+-- Table structure for table `carrosel`
+--
+
+CREATE TABLE `carrosel` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `title` varchar(255) NOT NULL,
+  `caption` varchar(255) NOT NULL,
+  `link` varchar(255) DEFAULT NULL,
+  `lang` varchar(2) NOT NULL,
+  `numOrder` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=33 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+
+
 
 
 --
