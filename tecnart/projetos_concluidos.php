@@ -60,10 +60,14 @@ $projetos = $stmt->fetchAll(PDO::FETCH_ASSOC);
    </div>
 </section>
 
-<!-- end product section -->
+<!-- dd- end product section -->
+
+
 
 <?= template_footer(); ?>
 
 </body>
 
 </html>
+
+
