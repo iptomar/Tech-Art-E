@@ -103,7 +103,6 @@ $language = ($_SESSION["lang"] == "en") ? "_en" : "";
    <div style="background-color: #dbdee1; padding-top: 50px; padding-bottom: 50px;">
       <div class="container">
          <div class="heading_container2 heading_center2">
-
             <h3>
                <?= change_lang("rd-projects-heading"); ?> &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp
                &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp
@@ -160,7 +159,7 @@ $language = ($_SESSION["lang"] == "en") ? "_en" : "";
          </div>
          <div class="text-center">
             <a style="display: inline-block; padding: 5px 25px; background-color:#002169; color: #ffffff; 
-                        -webkit-transition: all 0.3s; transition: all 0.3s;  font-family: 'Quicksand', sans-serif;  font-size: 20px;" href="projetos_em_curso.php">
+                        -webkit-transition: all 0.3s; transition: all 0.3s;" href="projetos_em_curso.php">
                   <?= change_lang("see-all-btn-rd-projects"); ?>
             </a>
          </div>
@@ -175,10 +174,14 @@ $language = ($_SESSION["lang"] == "en") ? "_en" : "";
 <section class="section-margin calc-60px">
    <div style="padding-bottom: 50px;">
       <div class="container">
-         <div class="section-intro pb-60px">
-            <h2 style="font-family: 'Quicksand', sans-serif; padding-bottom: 20px; padding-left: 50px;">
-               <?= change_lang("latest-news-heading") ?>
-            </h2>
+         <div class="heading_container2 heading_center2">
+            <h3>
+               <?= change_lang("latest-news-heading"); ?> &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp
+               &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp
+               &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp
+            </h3>
+
+            
          </div>
 
          <div class="owl-carousel owl-theme" id="bestSellerCarousel">
@@ -238,7 +241,7 @@ $language = ($_SESSION["lang"] == "en") ? "_en" : "";
 
          <div class="text-center">
             <a style="display: inline-block; padding: 5px 25px; background-color:#002169; color: #ffffff; 
-                     -webkit-transition: all 0.3s; transition: all 0.3s;  font-family: 'Quicksand', sans-serif;  font-size: 20px;" href="noticias.php">
+                     -webkit-transition: all 0.3s; transition: all 0.3s;" href="noticias.php">
                <?= change_lang("see-all-btn-latest-news") ?>
             </a>
          </div>
