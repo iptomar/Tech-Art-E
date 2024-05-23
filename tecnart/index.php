@@ -3,6 +3,10 @@ include 'config/dbconnection.php';
 include 'models/functions.php';
 $pdo = pdo_connect_mysql();
 $language = ($_SESSION["lang"] == "en") ? "_en" : "";
+
+$sql = "SELECT * FROM carrosel WHERE lang = '$_SESSION[lang]' ORDER BY numOrder";
+$stmt = $pdo->query($sql);
+$result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 <!DOCTYPE html>
@@ -11,66 +15,29 @@ $language = ($_SESSION["lang"] == "en") ? "_en" : "";
 <?= template_header('TECHN&ART'); ?>
 <!-- slider section -->
 <section class="home-slider owl-carousel">
-   <div class="slider-item" style="background-image:url('./assets/images/slider-index-1.jpg');">
-      <div class="overlay"></div>
-      <div class="row no-gutters slider-text justify-content-start" style="position: relative; height: 100%; max-width:100%;" data-scrollax-parent="true">
-         <div class="align-text-slider">
-            <div class="col-md-7 mobile_adjust ftco-animate mb-md-5">
-               <h1 class="mb-4">
-                  <?= change_lang("index-first-slide"); ?>
-               </h1>
-               <span class="subheading">
-                  <?= change_lang("index-first-slide-desc"); ?>
-               </span>
-               <div><a href="sobre.php" class="btn btn-primary px-4 py-3 mt-3 btn_no_left"  style="border-radius: 0;">
-                     <?= change_lang("know-more-btn-txt-slider") ?>
-                  </a></div>
+
+   <?php foreach ($result as $row) : ?>
+      <div class="slider-item" style="background-image:url('<?= $row['link'] ?>');">
+         <div class="overlay"></div>
+         <div class="row no-gutters slider-text justify-content-start" style="position: relative; height: 100%; max-width:100%;" data-scrollax-parent="true">
+            <div class="align-text-slider">
+               <div class="col-md-7 mobile_adjust ftco-animate mb-md-5">
+                  <h1 class="mb-4">
+                     <?= $row['title'] ?>
+                  </h1>
+                  <span class="subheading">
+                     <?= $row['caption'] ?>
+                  </span>
+                  <div>
+                     <a href="sobre.php" class="btn btn-primary px-4 py-3 mt-3 btn_no_left"  style="border-radius: 0;">
+                        <?= change_lang("know-more-btn-txt-slider") ?>
+                     </a>
+                  </div>
+               </div>
             </div>
          </div>
       </div>
-   </div>
-   </div>
-
-   <div class="slider-item" style="background-image:url('./assets/images/slider-index-2.jpg');">
-      <div class="overlay"></div>
-
-      <div class="row no-gutters slider-text justify-content-start" style="position: relative; height: 100%; max-width:100%;" data-scrollax-parent="true">
-         <div class="align-text-slider">
-            <div class="col-md-7 mobile_adjust ftco-animate mb-md-5">
-               <h1 class="mb-4">
-                  <?= change_lang("index-second-slide"); ?>
-               </h1>
-               <span class="subheading">
-                  <?= change_lang("index-second-slide-desc"); ?>
-               </span>
-               <div><a href="integrados.php" class="btn btn-primary px-4 py-3 mt-3 btn_no_left"   style="border-radius: 0;">
-                     <?= change_lang("know-more-btn-txt-slider") ?>
-                  </a></div>
-            </div>
-         </div>
-      </div>
-   </div>
-   </div>
-
-   <div class="slider-item" style="background-image:url('./assets/images/slider-index-3.jpg');">
-      <div class="overlay"></div>
-      <div class="row no-gutters slider-text justify-content-start" style="position: relative; height: 100%; max-width:100%;" data-scrollax-parent="true">
-         <div class="align-text-slider">
-            <div class="col-md-7 mobile_adjust ftco-animate mb-md-5">
-               <h1 class="mb-4">
-                  <?= change_lang("index-third-slide-slider"); ?>
-               </h1>
-               <span class="subheading">
-                  <?= change_lang("index-third-slide-slider-desc"); ?>
-               </span>
-               <div><a href="projetos_em_curso.php" class="btn btn-primary px-4 py-3 mt-3 btn_no_left"   style="border-radius: 0;">
-                     <?= change_lang("know-more-btn-txt-slider") ?>
-                  </a></div>
-            </div>
-         </div>
-      </div>
-   </div>
-   </div>
+   <?php endforeach; ?>
 
 </section>
 <!-- end slider section -->
