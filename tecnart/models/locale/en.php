@@ -65,18 +65,6 @@ return [
 
     //::::::index.php::::::
 
-    //Titulo do 1 slide
-    "index-first-slide" => "About TECHN&ART",
-    //Breve descricao do 1 slide
-    "index-first-slide-desc" => "A research and development centre focussed on the safeguard and enhancement of heritage, both experimental and applied",
-    //Titulo do 2 slide
-    "index-second-slide" => "Technology and interdisciplinarity in service of Heritage",
-    //Breve descricao do 2 slide
-    "index-second-slide-desc" => "TECHN&ART brings together researchers from a variety of fields in the Polytechnic University of Tomar, from ICT to the arts, from the social sciences to natural sciences",
-    //Titulo do 3 slide
-    "index-third-slide-slider" => "Research and development in network",
-    //Breve descricao do 3 slide
-    "index-third-slide-slider-desc" => "TECHN&ART hosts and leads R&D projects within a broad network of national and international partners, on the frontlines of heritage safeguard and enhancement",
     //botao 'Saiba mais' do slider
     "know-more-btn-txt-slider" => "KNOW MORE",
     //Etiqueta 'Video Institucional'
