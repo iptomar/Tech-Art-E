@@ -1124,11 +1124,64 @@ CREATE TABLE `newsletter` (
   UNIQUE KEY `newsletter_unique` (`email`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
+--
+-- Table structure for table `estrutura_organica`
+--
+
+CREATE TABLE `estrutura_organica` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `division` varchar(255) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `department` varchar(255) DEFAULT NULL,
+  `link` varchar(255) DEFAULT NULL,
+  `lang` varchar(2) NOT NULL,
+  `textOrder` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=33 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+
+
 ---
 --- Adiciona os emails dos investigadores à tabela newsletter
 ---
 INSERT IGNORE INTO newsletter (email)
 SELECT email FROM investigadores WHERE email <> '';
+
+INSERT INTO estrutura_organica (division, name, department, link, lang, textOrder) VALUES
+('Diretor', 'Célio Gonçalo Marques', 'Tecnologias de Informação e Comunicação', 'https://www.google.pt', 'pt', 0),
+('Diretora Adjunta', 'Hermínia Maria Pimenta Ferreira Sol', 'Literatura', NULL, 'pt', 1),
+('Secretário Administrativo', 'Hirondina Alves São Pedro', NULL, NULL, 'pt', 2),
+('Conselho Diretivo', 'Composto pelo Diretor, pela Diretora Adjunta e por:', NULL, NULL, 'pt', 3),
+('Conselho Diretivo', 'Ricardo Pereira Triães', 'Conservação e Restauro', NULL, 'pt', 4),
+('Conselho Diretivo', 'Eunice Ferreira Ramos Lopes', 'Turismo', NULL, 'pt', 5),
+('Conselho Diretivo', 'Regina Aparecida Delfino', 'Artes Gráficas', NULL, 'pt', 6),
+('Conselho Diretivo', 'Marta Margarida S. Dionísio', 'Línguas', NULL, 'pt', 7),
+('Conselho Diretivo', 'Ana Cláudia Pires da Silva', 'Gestão', NULL, 'pt', 8),
+('Conselho Científico', 'Composto por todos os membros integrados.', NULL, NULL, 'pt', 9),
+('Conselho Consultivo', 'Ana María Calvo Manuel', 'Faculdade de Belas Artes da Universidade Complutense de Madrid, Espanha', NULL, 'pt', 10),
+('Conselho Consultivo', 'Chao Gejin', 'Instituto de Tradição Oral da Academia Chinesa de Ciências Sociais', NULL, 'pt', 11),
+('Conselho Consultivo', 'José Julio García Arranz', 'Universidade da Estremadura, Espanha', NULL, 'pt', 12),
+('Conselho Consultivo', 'Laurent Tissot', 'Universidade de Neuchântel, Suíça', NULL, 'pt', 13),
+('Conselho Consultivo', 'Maria Filomena Guerra', 'Universidade Panthéon Sorbonne, Nanterre, França', NULL, 'pt', 14),
+('Conselho Consultivo', 'Zoltán Somhegyi', 'Universidade Károli Gáspár, Budapeste, Hungria', NULL, 'pt', 15);
+
+INSERT INTO estrutura_organica (division, name, department, link, lang, textOrder) VALUES
+('Director', 'Célio Gonçalo Marques', 'Information and Communication Technologies', NULL, 'en', 0),
+('Deputy Director', 'Hermínia Maria Pimenta Ferreira Sol', 'Literature', NULL, 'en', 1),
+('Executive Secretary', 'Hirondina Alves São Pedro', NULL, NULL, 'en', 2),
+('Board', 'Comprised of the Director, the Deputy Director and by:', NULL, NULL, 'en', 3),
+('Board', 'Ricardo Pereira Triães', 'Conservation and Restoration', NULL, 'en', 4),
+('Board', 'Eunice Ferreira Ramos Lopes', 'Turism', NULL, 'en', 5),
+('Board', 'Regina Aparecida Delfino', 'Graphic Arts', NULL, 'en', 6),
+('Board', 'Marta Margarida S. Dionísio', 'Languages', NULL, 'en', 7),
+('Board', 'Ana Cláudia Pires da Silva', 'Management', NULL, 'en', 8),
+('Scientific Council', 'Composed of all integrated members.', NULL, NULL, 'en', 9),
+('Advisory Council', 'Ana María Calvo Manuel', 'Faculty of Fine Arts of Complutense University of Madrid, Spain', NULL, 'en', 10),
+('Advisory Council', 'Chao Gejin', 'Institute of Oral Tradition of the Chinese Academy of Social Sciences', NULL, 'en', 11),
+('Advisory Council', 'José Julio García Arranz', 'University of Extremadura, Spain', NULL, 'en', 12),
+('Advisory Council', 'Laurent Tissot', 'University of Neuchântel, Switzerland', NULL, 'en', 13),
+('Advisory Council', 'Maria Filomena Guerra', 'Panthéon Sorbonne University, Nanterre, France', NULL, 'en', 14),
+('Advisory Council', 'Zoltán Somhegyi', 'Károli Gáspár University, Budapest, Hungary', NULL, 'en', 15);
+
 
 
 
