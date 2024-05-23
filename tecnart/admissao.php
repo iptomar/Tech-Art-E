@@ -3,19 +3,41 @@ require "./config/dbconnection.php";
 require "models/functions.php";
 include_once "config/configurations.php";
 
-
+$investigadores_html="";
 try {
     $pdo = pdo_connect_mysql();
     $sql = "SELECT id, nome FROM investigadores ORDER BY nome"; // Substitua "nome_da_tabela" pelo nome real da tabela
     $stmt = $pdo->query($sql);
     $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    //ESTÁ AQUI UM PRINT PARA RETIRAR. SERVE PARA O PRÓXIMO A DESENVOLVER CONSEGUIR VISUALIZAR O QUE ESTÁ A SER RETORNADO DA BD.
-    // Print the result
-    foreach ($result as $row) {
-        echo 'ID: ' . $row['id'] . ' - Nome: ' . $row['nome'] . '<br>';
+    // Calcular o número total de investigadores
+    $total_nomes = count($result);
+    
+    // Determinar o número ideal de colunas e linhas
+    $num_colunas = ceil(sqrt($total_nomes));
+    $num_linhas = ceil($total_nomes / $num_colunas);
+
+    // Construir a tabela HTML
+    $investigadores_html .= '<table class="table table-striped">';
+    $investigadores_html .= '<thead><tr><th>Investigadores ou Colaboradores</th></tr></thead>';
+    $investigadores_html .= '<tbody>';
+
+
+    for ($i = 0; $i < $num_linhas; $i++) {
+        $investigadores_html .= '<tr>';
+        for ($j = 0; $j < $num_colunas; $j++) {
+            $index = $i * $num_colunas + $j;
+            if ($index < $total_nomes) {
+                $investigadores_html .= '<td>' . htmlspecialchars($result[$index]['nome']) . '</td>';
+            } else {
+                $investigadores_html .= '<td></td>'; // Celulas vazias para completar a linha
+            }
+        }
+        $investigadores_html .= '</tr>';
     }
 
+    $investigadores_html .= '</tbody>';
+    $investigadores_html .= '</table>';
 } catch (Exception $e) {
     $result = [];
     echo 'Error: ' . $e->getMessage();
@@ -284,6 +306,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <br><?= change_lang("admission-msg-3") ?>
                     <span><a href="mailto:sec.techneart@ipt.pt" class="linkified">sec.techneart@ipt.pt</a></span>
             </div>
+             <!-- Injeção da tabela HTML dos investigadores -->
+             <?= $investigadores_html ?>
         </div>
         <div class="card-body">
             <form role="form" data-toggle="validator" action="admissao.php" method="post" enctype="multipart/form-data">
