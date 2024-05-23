@@ -3,6 +3,25 @@ require "./config/dbconnection.php";
 require "models/functions.php";
 include_once "config/configurations.php";
 
+
+try {
+    $pdo = pdo_connect_mysql();
+    $sql = "SELECT id, nome FROM investigadores ORDER BY nome"; // Substitua "nome_da_tabela" pelo nome real da tabela
+    $stmt = $pdo->query($sql);
+    $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    //ESTÁ AQUI UM PRINT PARA RETIRAR. SERVE PARA O PRÓXIMO A DESENVOLVER CONSEGUIR VISUALIZAR O QUE ESTÁ A SER RETORNADO DA BD.
+    // Print the result
+    foreach ($result as $row) {
+        echo 'ID: ' . $row['id'] . ' - Nome: ' . $row['nome'] . '<br>';
+    }
+
+} catch (Exception $e) {
+    $result = [];
+    echo 'Error: ' . $e->getMessage();
+}
+
+
 //Guardar um ficheiro na pasta pedido_<id pedido> mudando o nome do ficheiro
 function save_file($id, $new_name, $file)
 {

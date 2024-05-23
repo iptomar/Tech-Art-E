@@ -3,10 +3,8 @@ require "../verifica.php";
 require "../config/basedados.php";
 
 /**
- * 
- * Query obtém todos os projetos relacionados com o investigador logado
- * Se for admin logado, mostra todos os projetos
- * 
+ * Query obtém todos os projetos relacionados com o investigador logado.
+ * Se for admin logado, mostra todos os projetos.
  */
 $innerjoinSQL = "";
 $autenticado = $_SESSION["autenticado"];
@@ -15,7 +13,6 @@ if ($autenticado != "administrador") {
 }
 $sql = "SELECT id, nome, referencia, areapreferencial, financiamento, fotografia, concluido FROM projetos pj $innerjoinSQL ORDER BY nome";
 $result = mysqli_query($conn, $sql);
-
 ?>
 
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto|Varela+Round">
