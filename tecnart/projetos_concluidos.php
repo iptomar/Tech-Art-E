@@ -102,7 +102,9 @@ $total_pages = ceil($total_records / $results_per_page);
     </div>
 </section>
 
-<!-- end product section -->
+<!-- dd- end product section -->
+
+
 
 <?= template_footer(); ?>
 
