@@ -13,6 +13,15 @@ if ($autenticado != "administrador") {
 }
 $sql = "SELECT id, nome, referencia, areapreferencial, financiamento, fotografia, concluido FROM projetos pj $innerjoinSQL ORDER BY nome";
 $result = mysqli_query($conn, $sql);
+// Gerar um array de projetos para ser usado no JavaScript
+$projects_data = [];
+
+if (mysqli_num_rows($result) > 0) {
+    // Loop through each row and add it to the $projects_data array
+    while ($row = mysqli_fetch_assoc($result)) {
+        $projects_data[] = $row;
+    }
+}
 ?>
 
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto|Varela+Round">
