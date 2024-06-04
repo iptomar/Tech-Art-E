@@ -22,6 +22,7 @@ if (mysqli_num_rows($result) > 0) {
         $projects_data[] = $row;
     }
 }
+mysqli_close($conn);
 ?>
 
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto|Varela+Round">
@@ -68,45 +69,51 @@ if (mysqli_num_rows($result) > 0) {
                         <th>Ações</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <?php
-                    if (mysqli_num_rows($result) > 0) {
-                        while ($row = mysqli_fetch_assoc($result)) {
-                            echo "<tr>";
-                            echo "<td>" . $row["nome"] . "</td>";
-                            echo "<td>" . ($row["concluido"] ? "Concluído" : "Em Curso") . "</td>";
-                            echo "<td>" . $row["referencia"] . "</td>";
-                            echo "<td>" . $row["areapreferencial"] . "</td>";
-                            echo "<td>" . $row["financiamento"] . "</td>";
-                            echo "<td><img src='../assets/projetos/" . $row["fotografia"] . "' width='100px' height='100px'></td>";
-                            echo "<td>";
-                            $sql1 = "SELECT investigadores_id, isManager FROM investigadores_projetos WHERE projetos_id = " . $row["id"];
-                            $result1 = mysqli_query($conn, $sql1);
-                            $isManager = 0;
-                            if (mysqli_num_rows($result1) > 0) {
-                                while ($row1 = mysqli_fetch_assoc($result1)) {
-                                    if ($row1['investigadores_id'] == $autenticado && $row1['isManager'] == 1) {
-                                        $isManager = 1;
-                                        break;
-                                    }
-                                }
-                            }
-                            if ($_SESSION["autenticado"] == "administrador" || $isManager == 1) {
-                                echo "<a href='edit.php?id=" . $row["id"] . "' class='btn btn-primary' style='min-width: 85px;'><span>Alterar</span></a>";
-                                echo "<br><br>";
-                                echo "<a href='remove.php?id=" . $row["id"] . "' class='btn btn-danger' style='min-width: 85px'><span>Apagar</span></a>";
-                            }
-                            echo "</td>";
-                            echo "</tr>";
-                        }
-                    }
-                    ?>
+                <tbody id="projectsTableBody">
+                    <!-- O conteúdo será preenchido dinamicamente pelo JavaScript -->
                 </tbody>
             </table>
         </div>
     </div>
 </div>
 
-<?php
-mysqli_close($conn);
-?>
+<script>
+// Array de projetos passado do PHP para o JavaScript
+var projectsData = <?php echo json_encode($projects_data); ?>;
+var autenticado = '<?php echo $_SESSION["autenticado"]; ?>';
+
+function generateProjectHTML(project) {
+    var actions = '';
+    if (autenticado === "administrador" || project.isManager) {
+        actions += "<a href='edit.php?id=" + project.id + "' class='btn btn-primary' style='min-width: 85px;'><span>Alterar</span></a>";
+        actions += "<br><br>";
+        actions += "<a href='remove.php?id=" + project.id + "' class='btn btn-danger' style='min-width: 85px'><span>Apagar</span></a>";
+    }
+
+    return `
+        <tr>
+            <td>${project.nome}</td>
+            <td>${project.concluido ? "Concluído" : "Em Curso"}</td>
+            <td>${project.referencia}</td>
+            <td>${project.areapreferencial}</td>
+            <td>${project.financiamento}</td>
+            <td><img src='../assets/projetos/${project.fotografia}' width='100px' height='100px'></td>
+            <td>${actions}</td>
+        </tr>
+    `;
+}
+
+function generateProjectsHTML() {
+    var html = "";
+    for (var i = 0; i < projectsData.length; i++) {
+        html += generateProjectHTML(projectsData[i]);
+    }
+    return html;
+}
+
+// Obter o elemento tbody da tabela
+var tbody = document.getElementById("projectsTableBody");
+
+// Gerar e inserir HTML de todos os projetos no tbody da tabela
+tbody.innerHTML = generateProjectsHTML();
+</script>
