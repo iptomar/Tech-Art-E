@@ -7,10 +7,28 @@ include 'models/functions.php';
 
 $pdo = pdo_connect_mysql();
 $language = ($_SESSION["lang"] == "en") ? "_en" : "";
-$query = "SELECT id, COALESCE(NULLIF(nome{$language}, ''), nome) AS nome, fotografia FROM projetos WHERE concluido=false";
+// Set up pagination variables
+$results_per_page = 6; // Number of results per page
+$page = isset($_GET['page']) ? (int)$_GET['page'] : 1; // Current page number
+$start_from = ($page - 1) * $results_per_page; // Start index for the SQL query
+
+$query = "SELECT id, COALESCE(NULLIF(nome{$language}, ''), nome) AS nome, fotografia 
+          FROM projetos 
+          WHERE concluido = false 
+          ORDER BY nome 
+          LIMIT :start_from, :results_per_page";
 $stmt = $pdo->prepare($query);
+$stmt->bindValue(':start_from', $start_from, PDO::PARAM_INT);
+$stmt->bindValue(':results_per_page', $results_per_page, PDO::PARAM_INT);
 $stmt->execute();
 $projetos = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+// Get the total number of records
+$total_query = "SELECT COUNT(*) FROM projetos WHERE concluido = false";
+$total_stmt = $pdo->prepare($total_query);
+$total_stmt->execute();
+$total_records = $total_stmt->fetchColumn();
+$total_pages = ceil($total_records / $results_per_page);
 ?>
 
 <!DOCTYPE html>
@@ -68,6 +86,21 @@ HTML header section including template header with translated title
     </div>
 </section>
 <!-- end product section -->
+
+<!-- Pagination Links -->
+<nav aria-label="Page navigation">
+                <ul class="pagination justify-content-center mt-3">
+                    <?php if($page > 1): ?>
+                        <li class="page-item"><a class="page-link" href="projetos_em_curso.php?page=<?= $page - 1 ?>">Anterior</a></li>
+                    <?php endif; ?>
+                    <?php for ($i = 1; $i <= $total_pages; $i++) : ?>
+                        <li class="page-item <?= ($i == $page) ? 'active' : '' ?>"><a class="page-link" href="projetos_em_curso.php?page=<?= $i ?>"><?= $i ?></a></li>
+                    <?php endfor; ?>
+                    <?php if($page < $total_pages): ?>
+                        <li class="page-item"><a class="page-link" href="projetos_em_curso.php?page=<?= $page + 1 ?>">Próximo</a></li>
+                    <?php endif; ?>
+                </ul>
+            </nav>
 
 <?= template_footer(); ?>
 
