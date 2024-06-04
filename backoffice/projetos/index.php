@@ -50,6 +50,11 @@ if (mysqli_num_rows($result) > 0) {
                         <a href="create.php" class="btn btn-success"><i class="material-icons">&#xE147;</i> <span>Adicionar Novo Projeto</span></a>
                     </div>
                 </div>
+                <div class="row mt-3">
+					<div class="col">
+						<input type="text" id="searchInput" class="form-control" placeholder="Pesquisar...">
+					</div>
+    			</div>
             </div>
             <table class="table table-striped table-hover">
                 <thead>
