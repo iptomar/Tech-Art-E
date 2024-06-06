@@ -59,7 +59,7 @@ $total_pages = ceil($total_records / $results_per_page);
 <section class="product_section layout_padding">
     <div style="padding-top: 20px;">
         <div class="container">
-            <div class="row mt-3">
+            <div class="layout_padding">
                 <div class="col">
                     <input type="text" id="searchInput" class="form-control" placeholder="Pesquisar...">
                 </div>
