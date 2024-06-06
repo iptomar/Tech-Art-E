@@ -103,17 +103,34 @@ function generateProjectHTML(project) {
     `;
 }
 
-function generateProjectsHTML() {
+function generateProjectsHTML(projects) {
     var html = "";
-    for (var i = 0; i < projectsData.length; i++) {
-        html += generateProjectHTML(projectsData[i]);
+    for (var i = 0; i < projects.length; i++) {
+        html += generateProjectHTML(projects[i]);
     }
     return html;
 }
+
 
 // Obter o elemento tbody da tabela
 var tbody = document.getElementById("projectsTableBody");
 
 // Gerar e inserir HTML de todos os projetos no tbody da tabela
-tbody.innerHTML = generateProjectsHTML();
+tbody.innerHTML = generateProjectsHTML(projectsData);
+
+document.getElementById('searchInput').addEventListener('input', function() {
+    var searchTerm = this.value.toLowerCase();
+    var filteredProjects = projectsData.filter(function(project) {
+        var estado = project.concluido ? "concluído" : "em curso";
+        return project.nome.toLowerCase().includes(searchTerm) ||
+               project.referencia.toLowerCase().includes(searchTerm) ||
+               project.areapreferencial.toLowerCase().includes(searchTerm) ||
+               project.financiamento.toLowerCase().includes(searchTerm) ||
+               estado.toLowerCase().includes(searchTerm);
+    });
+    tbody.innerHTML = generateProjectsHTML(filteredProjects);
+});
+
+
+
 </script>
