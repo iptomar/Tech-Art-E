@@ -36,6 +36,10 @@
     padding-right: 10px !important;
   }
 
+  .btn_no_left {
+    left: 0 !important;
+  }
+
   .mobile_adjust {
     width: 100% !important;
     max-width: 90% !important;
