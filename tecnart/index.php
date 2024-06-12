@@ -17,7 +17,7 @@ $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <section class="home-slider owl-carousel">
 
    <?php foreach ($result as $row) : ?>
-      <div class="slider-item" style="background-image:url('<?= $row['link'] ?>');">
+      <div class="slider-item" style="background-image:url('./assets/images/slider/<?= $row['link'] ?>');">
          <div class="overlay"></div>
          <div class="row no-gutters slider-text justify-content-start" style="position: relative; height: 100%; max-width:100%;" data-scrollax-parent="true">
             <div class="align-text-slider">
@@ -29,7 +29,7 @@ $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
                      <?= $row['caption'] ?>
                   </span>
                   <div>
-                     <a href="sobre.php" class="btn btn-primary px-4 py-3 mt-3 btn_no_left"  style="border-radius: 0;">
+                     <a href="sobre.php" class="btn btn-primary px-4 py-3 mt-3"  style="border-radius: 0; color: #002169;">
                         <?= change_lang("know-more-btn-txt-slider") ?>
                      </a>
                   </div>
@@ -50,7 +50,7 @@ $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <section class="why_section layout_padding">
    <div class="container">
       <div class="heading_container heading_center">
-         <h3>
+         <h3 style="font-weight: lighter; font-size: 2.5rem;">
             <?= change_lang("institutional-video-heading"); ?>
          </h3>
       </div>
@@ -69,8 +69,8 @@ $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <section class="product_section layout_padding">
    <div style="background-color: #dbdee1; padding-top: 50px; padding-bottom: 50px;">
       <div class="container">
-         <div class="heading_container2 heading_center2">
-            <h3>
+         <div class="heading_container2 heading_center2 pb-4">
+            <h3 style="font-weight: lighter;">
                <?= change_lang("rd-projects-heading"); ?> &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp
                &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp
                &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp
@@ -83,45 +83,31 @@ $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
             $sql = "SELECT id,
                      COALESCE(NULLIF(nome{$language}, ''), nome) AS nome,
                      COALESCE(NULLIF(descricao{$language}, ''), descricao) AS descricao,
-                     fotografia FROM projetos WHERE concluido = 0 ORDER BY id DESC LIMIT 4";
+                     fotografia FROM projetos WHERE concluido = 0 ORDER BY id DESC LIMIT 3";
             $stmt = $pdo->prepare($sql);
             $stmt->execute();
             $projetos = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            foreach ($projetos as $row) {
+
+            foreach ($projetos as $row) :
             ?>
-               <div class="col">
-                  <div style="padding-top: 40px">
-                     <div class="img-box">
-                        <a href="projeto.php?projeto=<?= $row["id"]; ?>">
-                           <img style="object-fit: cover; width:230px; height:230px;" src="../backoffice/assets/projetos/<?= $row["fotografia"]; ?>" alt="">
-                        </a>
-                     </div>
-                  </div>
-                  <div class="detail-box">
-                     <div style="color: #333F50; padding-left: 15px; padding-top: 15px; text-align: center; width:210px;">
-                        <a href="projeto.php?projeto=<?= $row["id"]; ?>" style="color:#333F50;">
-                           <h5>
-                              <?= $row["nome"]; ?>
-                           </h5>
-                        </a>
-                     </div>
-                     <div style="padding-left: 30px; text-align: center; width:210px;">
-                        <h6>
-                           <?=
-                           strlen($row["descricao"]) > 145 ?
-                              preg_split("/\s+(?=\S*+$)/", substr($row["descricao"], 0, 150))[0] . "..."
-                              : $row["descricao"];
-                           ?>
-                        </h6>
-                     </div>
+
+               <div class="col card-product">
+                  <div class="absoluto">
+                     <a href="projeto.php?projeto=<?= $row['id'] ?>" style="display: inline-block; vertical-align: top;">
+                        <div style="z-index: 1;" class="image_default project-box">
+                           <img class="img-fluid project-box" src="../backoffice/assets/projetos/<?= $row['fotografia'] ?>" alt="">
+                           <div class="text-block">
+                              <h5 style="font-size: 20px; font-weight: 600;">
+                                 <?= $row["nome"]; ?>
+                              </h5>
+                           </div>
+                        </div>
+                     </a>
+
                   </div>
                </div>
                
-               
-            <?php
-            }
-
-            ?>
+            <?php endforeach; ?>
 
          </div>
          <div class="text-center">
@@ -142,7 +128,7 @@ $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
    <div style="padding-bottom: 50px;">
       <div class="container">
          <div class="heading_container2 heading_center2">
-            <h3>
+            <h3 style="font-weight: lighter;">
                <?= change_lang("latest-news-heading"); ?> &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp
                &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp
                &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp

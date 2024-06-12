@@ -206,6 +206,8 @@ return [
 
     //::::::projeto.php::::::
 
+    //Pesquisar
+    "search" => "Pesquisar",
     //Classe css para todos os botoes 'Sobre o projeto'
     "about-project-btn-class" => "sobre o projeto",
     //Classe css para todos os titulos de separadores 'Sobre'
