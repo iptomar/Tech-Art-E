@@ -61,7 +61,7 @@ $total_pages = ceil($total_records / $results_per_page);
         <div class="container">
             <div class="layout_padding">
                 <div class="col">
-                    <input type="text" id="searchInput" class="form-control" placeholder="Pesquisar...">
+                    <input type="text" id="searchInput" class="form-control" placeholder="<?= change_lang("search") ?>...">
                 </div>
             </div>
             <div class="row justify-content-center mt-3" id="projectsContainer">

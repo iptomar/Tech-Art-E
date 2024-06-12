@@ -1201,15 +1201,15 @@ CREATE TABLE `carrosel` (
 -- Dumping data for table `publicacoes_tipos`
 --
 
-INSERT INTO imagens_carrosel (title, caption, link, lang, numOrder) VALUES
-('Sobre o TECHN&ART', 'Centro de investigação e desenvolvimento nos domínios da Salvaguarda do Património e da sua Valorização, experimental e aplicada', './assets/images/slider-index-1.jpg', 'pt', 0),
-('Tecnologia e interdisciplinaridade ao serviço do Património', 'O TECHN&ART une investigadores/as das mais diversas áreas disciplinares presentes no Instituto Politécnico de Tomar, das TIC às artes, das ciências sociais às ciências naturais', './assets/images/slider-index-2.jpg', 'pt', 1),
-('Investigação e desenvolvimento em rede', 'O TECHN&ART acolhe e coordena projetos de I&D numa ampla rede de parceiros nacionais e internacionais, na linha da frente da salvaguarda e valorização patrimoniais', './assets/images/slider-index-3.jpg', 'pt', 2);
+INSERT INTO carrosel (title, caption, link, lang, numOrder) VALUES
+('Sobre o TECHN&ART', 'Centro de investigação e desenvolvimento nos domínios da Salvaguarda do Património e da sua Valorização, experimental e aplicada', 'slider-index-1.jpg', 'pt', 0),
+('Tecnologia e interdisciplinaridade ao serviço do Património', 'O TECHN&ART une investigadores/as das mais diversas áreas disciplinares presentes no Instituto Politécnico de Tomar, das TIC às artes, das ciências sociais às ciências naturais', 'slider-index-2.jpg', 'pt', 1),
+('Investigação e desenvolvimento em rede', 'O TECHN&ART acolhe e coordena projetos de I&D numa ampla rede de parceiros nacionais e internacionais, na linha da frente da salvaguarda e valorização patrimoniais', 'slider-index-3.jpg', 'pt', 2);
 
-INSERT INTO imagens_carrosel (title, caption, link, lang, numOrder) VALUES
-('About TECHN&ART', 'A research and development centre focussed on the safeguard and enhancement of heritage, both experimental and applied', './assets/images/slider-index-1.jpg', 'en', 0),
-('Technology and interdisciplinarity in service of Heritage', 'TECHN&ART brings together researchers from a variety of fields in the Polytechnic University of Tomar, from ICT to the arts, from the social sciences to natural sciences', './assets/images/slider-index-2.jpg', 'en', 1),
-('Research and development in network', 'TECHN&ART hosts and leads R&D projects within a broad network of national and international partners, on the frontlines of heritage safeguard and enhancement', './assets/images/slider-index-3.jpg', 'en', 2);
+INSERT INTO carrosel (title, caption, link, lang, numOrder) VALUES
+('About TECHN&ART', 'A research and development centre focussed on the safeguard and enhancement of heritage, both experimental and applied', 'slider-index-1.jpg', 'en', 0),
+('Technology and interdisciplinarity in service of Heritage', 'TECHN&ART brings together researchers from a variety of fields in the Polytechnic University of Tomar, from ICT to the arts, from the social sciences to natural sciences', 'slider-index-2.jpg', 'en', 1),
+('Research and development in network', 'TECHN&ART hosts and leads R&D projects within a broad network of national and international partners, on the frontlines of heritage safeguard and enhancement', 'slider-index-3.jpg', 'en', 2);
 
 
 
