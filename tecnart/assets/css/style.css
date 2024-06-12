@@ -1,11 +1,11 @@
-@import url('https://fonts.googleapis.com/css2?family=Merriweather+Sans:ital,wght@0,300..800;1,300..800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 
 * {
 	box-sizing: border-box;
 }
 
 body {
-	font-family: 'Merriweather Sans', sans-serif;
+	font-family: 'Montserrat', sans-serif;
 	color: #0c0c0c;
 	background-color: #ffffff;
 	overflow-x: hidden;
@@ -627,12 +627,6 @@ a:focus {
 	font-weight: 700;
 }
 
-.project-box {
-    width: 300px !important;
-	height: 230px !important;
-	object-fit: cover;
-}
-
 .remove_line_bt h2::after {
 	display: none;
 }
@@ -1239,7 +1233,7 @@ form input[type="submit"]:focus {
 .owl-carousel .owl-nav {
 	position: absolute;
 	top: 50%;
-	width: 103%;
+	width: 102%;
 }
 
 .owl-carousel .owl-nav .owl-prev,
@@ -1850,7 +1844,7 @@ fieldset:disabled a.btn {
 
 .text-block {
 	position: absolute;
-	font-family: 'Merriweather Sans';
+	font-family: system-ui;
 	bottom: 16px;
 	left: 16px;
 	color: white;
@@ -1979,7 +1973,8 @@ fieldset:disabled a.btn {
 	transform: translate(-50%, -50%);
 	z-index: 10;
 	color: #ffffff;
-	font-family: 'Merriweather Sans', sans-serif;
+	font-family: 'PT Sans', sans-serif;
+	text-transform: uppercase;
 	font-size: 23px;
 	text-align: center;
 	font-weight: 600;
@@ -2188,7 +2183,7 @@ fieldset:disabled a.btn {
 }
 
 .innerButton {
-	font-family: 'Merriweather Sans', sans-serif;
+	font-family: 'Montserrat', sans-serif;
 	font-size: 16px;
 	text-transform: uppercase;
 	font-weight: 400;
@@ -2259,7 +2254,7 @@ figcaption {
 	margin-top: 10px;
 	z-index: 1;
 	font-size: 14px;
-	font-family: 'Merriweather Sans', sans-serif;
+	font-family: 'Montserrat', sans-serif;
 	font-weight: 300;
 }
 
@@ -2273,7 +2268,7 @@ figcaption {
 
 .news-image{
   height: 300px;
-  width: 360px;
+  width: 300px;
   object-fit: cover; /* Resize the image to cover the entire container */
 }
 

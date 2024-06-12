@@ -42,13 +42,13 @@ $(function() {
       dots: false,
       responsive:{
         0:{
-          items: 1
+          items:1
         },
-        1000:{
+        600:{
           items: 2
         },
-        1200:{
-          items: 3
+        900:{
+          items:3
         },
     
       }

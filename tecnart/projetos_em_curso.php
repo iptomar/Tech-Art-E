@@ -64,7 +64,7 @@ HTML header section including template header with translated title
             <div class="layout_padding">
                 <div class="col">
                     <!-- Search input field -->
-                    <input type="text" id="searchInput" class="form-control" placeholder="<?= change_lang("search") ?>...">
+                    <input type="text" id="searchInput" class="form-control" placeholder="Pesquisar...">
                 </div>
             </div>
             <div class="row justify-content-center mt-3" id="projectsContainer">
