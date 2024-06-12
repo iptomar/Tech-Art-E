@@ -56,7 +56,7 @@ if ($remaining_records > 0) {
 /**
  * Obtém o número da página atual ou define como 1 por padrão
  */
-$page = isset($_GET['page']) && is_int($_GET['page']) && $_GET['page'] > 0 ? $_GET['page'] : 1;
+$page = isset($_GET['page']) ? $_GET['page'] : 1;
 $page = max(1, min($total_pages, intval($page)));
 
 $start_from = ($page - 1) * $records_per_page;

@@ -40,7 +40,7 @@ include 'models/functions.php';
 
                         <div class="image2">
                            <img class="centrare" style="object-fit: cover; width:350px; height:250px;" src="./assets/images/missao.jpg" alt="">
-                           <button onclick="window.location.href='missao.php'" type="button" class="mybuttonoverlap btn" style="border-radius: 0; color: #002169;"><?= change_lang("opportunities-know-more-btn") ?></button>
+                           <button onclick="window.location.href='missao.php'" type="button" class="mybuttonoverlap btn"><?= change_lang("opportunities-know-more-btn") ?></button>
                            <div class="qualquer"><?= change_lang("mission-and-goals-caption") ?></div>
                         </div>  
 
@@ -50,7 +50,7 @@ include 'models/functions.php';
                
                   <div class="image2">
                      <img class="centrare" style="object-fit: cover; width:350px; height:250px;" src="./assets/images/eixos.jpg" alt="">
-                     <button onclick="window.location.href='eixos.php'" type="button" class="mybuttonoverlap btn" style="border-radius: 0; color: #002169;"><?= change_lang("opportunities-know-more-btn") ?></button>
+                     <button onclick="window.location.href='eixos.php'" type="button" class="mybuttonoverlap btn"><?= change_lang("opportunities-know-more-btn") ?></button>
                      <div class="qualquer"><?= change_lang("research-axes-caption") ?></div>
                   </div>
 
@@ -65,7 +65,7 @@ include 'models/functions.php';
                
                   <div  class="image2">
                      <img class="centrare" style="object-fit: cover; width:350px; height:250px;" src="./assets/images/estrutura.jpg" alt="">
-                     <button onclick="window.location.href='estrutura.php'" type="button" class="mybuttonoverlap btn" style="border-radius: 0; color: #002169;"><?= change_lang("opportunities-know-more-btn") ?></button>
+                     <button onclick="window.location.href='estrutura.php'" type="button" class="mybuttonoverlap btn"><?= change_lang("opportunities-know-more-btn") ?></button>
                      <div class="qualquer"><?= change_lang("organic-struct-caption") ?></div>
                   </div>  
                
@@ -77,7 +77,7 @@ include 'models/functions.php';
                
                   <div class="image2">
                      <img class="centrare" style="object-fit: cover; width:350px; height:250px;" src="./assets/images/oportunidades.jpg" alt="">
-                     <button onclick="window.location.href='oportunidades.php'" type="button" class="mybuttonoverlap btn" style="border-radius: 0; color: #002169;"><?= change_lang("opportunities-know-more-btn") ?></button>
+                     <button onclick="window.location.href='oportunidades.php'" type="button" class="mybuttonoverlap btn"><?= change_lang("opportunities-know-more-btn") ?></button>
                      <div class="qualquer"><?= change_lang("opportunities-caption") ?></div>
                   </div>
 
