@@ -13,7 +13,7 @@ $enWeight = $_SESSION["lang"] == "en" ? "bold" : "normal";
     <meta name="keywords" content="" />
     <meta name="description" content="" />
     <meta name="author" content="" />
-    <link rel="shortcut icon" href="images/favicon.png" type="">
+    <link rel="shortcut icon" href="/favicon.png" type="">
     <title><?= $title ?></title>
     <!-- bootstrap core css -->
     <link rel="stylesheet" type="text/css" href="./assets/css/bootstrap.css" />
@@ -229,6 +229,7 @@ $enWeight = $_SESSION["lang"] == "en" ? "bold" : "normal";
                             <li class="nav-item">
                                 <a class="nav-link" href="../backoffice/index.php">Login</a>
                             </li>
+                        </ul>
                     </div>
                 </nav>
             </div>

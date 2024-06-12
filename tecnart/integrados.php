@@ -20,7 +20,7 @@ $language = ($_SESSION["lang"] == "en") ? "_en" : "";
 $records_per_page = 12;
 
 // Get current page number or default to 1
-$page = isset($_GET['page']) ? $_GET['page'] : 1;
+$page = isset($_GET['page']) && is_int($_GET['page']) && $_GET['page'] > 0 ? $_GET['page'] : 1;
 
 // Calculate starting point for fetching records
 $start_from = ($page - 1) * $records_per_page;
